@@ -6,7 +6,7 @@ documentação final.
 | Entrega pedida | Onde está | Status |
 |----------------|-----------|:------:|
 | Realizar e documentar os testes (verificação e validação) | [PLANO-DE-TESTES.md](PLANO-DE-TESTES.md) · [VERIFICACAO.md](VERIFICACAO.md) · [testes-sistema/](testes-sistema/) · [evidencias/](evidencias/) | ✅ |
-| Formulário para os testadores (nome, data, o que funcionou, o que não funcionou, o que não foi testado, prints) | [formulario/Formulario-Teste-HarmoniMix.docx](formulario/Formulario-Teste-HarmoniMix.docx) | ✅ |
+| Formulário para os testadores (nome, data, o que funcionou, o que não funcionou, o que não foi testado, prints) | [5 formulários, um por critério de avaliação](VALIDACAO-COM-USUARIOS.md#um-critério-de-avaliação-por-testador) em [formulario/](formulario/) | ✅ |
 | Oferecer a solução a 5 colegas (endereço para testar) | [PUBLICAR-ONLINE.md](PUBLICAR-ONLINE.md) · [VALIDACAO-COM-USUARIOS.md](VALIDACAO-COM-USUARIOS.md) | ⏳ estudante |
 | PDF com as 5 opiniões/testes | [feedbacks/](feedbacks/) | ⏳ estudante |
 | Correções e melhorias incorporadas à documentação | [correcoes/REGISTRO-DE-CORRECOES.md](correcoes/REGISTRO-DE-CORRECOES.md) | ✅ D01–D07 · ⏳ testadores |
@@ -37,7 +37,7 @@ situacao-3-validacao/
 ├── ROTEIRO-VIDEO-MUDANCAS.md   ← roteiro do vídeo final
 ├── testes-sistema/             ← 15 testes no navegador (Playwright) + medição de desempenho
 ├── evidencias/                 ← prints gerados pelos testes (CTS-01 … CTS-16) e desempenho.txt
-├── formulario/                 ← formulário (.docx e .pdf) + CSV de exemplo para a tarefa T4
+├── formulario/                 ← 5 formulários (um por critério) + geral, em .docx e .pdf, + CSV da tarefa T4
 ├── feedbacks/                  ← formulários respondidos pelos 5 testadores (PDF)
 └── correcoes/                  ← registro de correções e melhorias
 ```

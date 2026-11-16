@@ -8,9 +8,24 @@
 - [ ] Sistema publicado na internet: siga [PUBLICAR-ONLINE.md](PUBLICAR-ONLINE.md) e anote o endereço
 - [ ] Endereço preenchido no formulário ([formulario/Formulario-Teste-HarmoniMix.docx](formulario/Formulario-Teste-HarmoniMix.docx), campo "Endereço do sistema")
 - [ ] Testado o login com a conta de demonstração no endereço publicado
-- [ ] Escolhidos **5 testadores** (colegas de curso ou profissionais da área), de preferência com perfis diferentes:
-      pelo menos 1 que mexa com música/DJ, 1 que use pelo celular e 1 colega de TI
-- [ ] Enviado a cada um: **endereço + formulário (.docx) + `modelo-importacao.csv`** (para a tarefa T4)
+- [ ] Escolhidos **5 testadores** reais (colegas de curso ou profissionais da área), um para cada critério (tabela abaixo)
+- [ ] Enviado a cada um: **endereço + o formulário do seu critério (.docx) + `modelo-importacao.csv`** (para a tarefa T4)
+
+### Um critério de avaliação por testador
+
+Cada testador faz o mesmo roteiro geral (12 tarefas), mas com **um foco diferente**, para que os 5 testes se
+complementem. O formulário de cada um tem uma seção extra, "★ Seu critério de avaliação", com um checklist próprio.
+
+| Testador | Critério | Pergunta principal | Perfil ideal | Formulário |
+|:--------:|----------|--------------------|--------------|------------|
+| 1 | **Funcionalidade** | Cada função faz o que promete e os resultados estão corretos? | Qualquer colega | [Testador-1](formulario/Formulario-Testador-1-Funcionalidade.docx) |
+| 2 | **Usabilidade** | Dá para usar sem ninguém explicar? | Alguém que **não** é de TI | [Testador-2](formulario/Formulario-Testador-2-Usabilidade.docx) |
+| 3 | **Utilidade para DJ** | As regras musicais e as sugestões fazem sentido na prática? | DJ ou quem conhece música eletrônica | [Testador-3](formulario/Formulario-Testador-3-Utilidade-para-DJ.docx) |
+| 4 | **Compatibilidade e celular** | Funciona em outros aparelhos, telas e navegadores? | Quem vai testar pelo celular | [Testador-4](formulario/Formulario-Testador-4-Compatibilidade-e-Celular.docx) |
+| 5 | **Robustez e segurança** | Dá para quebrar o sistema com dados errados ou ações inesperadas? | Colega de TI | [Testador-5](formulario/Formulario-Testador-5-Robustez-e-Seguranca.docx) |
+
+Esses critérios cobrem as características de qualidade vistas na disciplina: funcionalidade, usabilidade,
+adequação ao negócio (o problema do DJ), portabilidade/compatibilidade e confiabilidade/segurança.
 - [ ] Combinado o prazo de devolução (sugestão: 3 dias)
 
 ### Mensagem sugerida para enviar aos testadores
@@ -36,13 +51,13 @@ Depois, junte os cinco num único PDF para a entrega (`feedbacks/HarmoniMix-5-te
 
 ### 3.1 Participantes
 
-| # | Testador(a) | Data | Perfil (curso/área · experiência com DJ) | Dispositivo / navegador |
-|---|-------------|------|------------------------------------------|-------------------------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| # | Critério | Testador(a) | Data | Perfil (curso/área · experiência com DJ) | Dispositivo / navegador | Nota do critério (1–5) |
+|---|----------|-------------|------|------------------------------------------|-------------------------|:----------------------:|
+| 1 | Funcionalidade | | | | | |
+| 2 | Usabilidade | | | | | |
+| 3 | Utilidade para DJ | | | | | |
+| 4 | Compatibilidade e celular | | | | | |
+| 5 | Robustez e segurança | | | | | |
 
 ### 3.2 Resultado por tarefa
 

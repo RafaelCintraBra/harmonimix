@@ -1,0 +1,89 @@
+[
+  {
+    "n": 1, "criterio": "Funcionalidade", "arquivo": "Formulario-Testador-1-Funcionalidade",
+    "pergunta": "Cada função faz o que promete e os resultados estão corretos?",
+    "perfil": "Qualquer colega de curso.",
+    "como": "Faça o roteiro de tarefas com calma e confira os números com uma calculadora. Não basta a tela abrir: o resultado precisa estar certo.",
+    "itens": [
+      "Ao cadastrar uma faixa, ela aparece na biblioteca com o BPM, o tom e a duração iguais aos que você digitou.",
+      "Os filtros da biblioteca (BPM mínimo/máximo, tom, gênero) mostram somente faixas que atendem ao filtro.",
+      "No editor, a duração total é igual à soma das durações das faixas (confira com a calculadora).",
+      "O BPM médio mostrado no editor está correto.",
+      "As 💡 Sugestões só trazem faixas com tom compatível (confira na Roda de Camelot) e BPM até 6% de diferença.",
+      "Ao reordenar (▲ ▼) ou remover (X), as etiquetas 🟢🟡🔴 e a pontuação harmônica são recalculadas.",
+      "O CSV exportado tem as mesmas faixas, na mesma ordem e com a mesma análise do setlist.",
+      "Editar o BPM de uma faixa muda a análise dos setlists que a usam.",
+      "Excluir um evento não apaga os setlists que estavam vinculados a ele."
+    ]
+  },
+  {
+    "n": 2, "criterio": "Usabilidade", "arquivo": "Formulario-Testador-2-Usabilidade",
+    "pergunta": "Dá para usar o sistema sem ninguém explicar?",
+    "perfil": "De preferência alguém que NÃO é da área de TI.",
+    "como": "Não leia o manual antes. Tente fazer as tarefas sozinho(a) e anote cada momento em que travou, hesitou ou não entendeu um texto. Isso é exatamente o que o projeto precisa saber.",
+    "itens": [
+      "Na primeira tela depois do login, entendi para que serve o sistema em menos de 1 minuto.",
+      "Encontrei cada função pelo menu sem precisar procurar muito.",
+      "Os nomes dos botões dizem claramente o que eles fazem.",
+      "Quando errei algo, a mensagem explicou o que estava errado e como corrigir.",
+      "Sempre soube em que tela eu estava (título e trilha no topo da página).",
+      "Depois de cada ação, o sistema mostrou uma confirmação (mensagem verde ou azul).",
+      "Consegui cancelar ou desfazer ações (ex.: cancelar uma exclusão).",
+      "Entendi o significado de 🟢 Suave, 🟡 Atenção e 🔴 Arriscada sem ler a página de ajuda.",
+      "As cores, o tamanho das letras e o contraste são confortáveis para ler.",
+      "Em quantas tarefas precisei de ajuda ou desisti? ____"
+    ]
+  },
+  {
+    "n": 3, "criterio": "Utilidade para DJ", "arquivo": "Formulario-Testador-3-Utilidade-para-DJ",
+    "pergunta": "As regras musicais e as sugestões fazem sentido na prática de um DJ?",
+    "perfil": "Alguém que toca como DJ, produz ou conhece bem música eletrônica.",
+    "como": "Se puder, cadastre (ou importe do Rekordbox) de 5 a 10 músicas que você conhece, com o BPM e o tom reais, e monte um setlist com elas. Avalie se as sugestões e os alertas batem com a sua experiência.",
+    "itens": [
+      "As sugestões de próxima faixa combinariam de verdade numa mixagem.",
+      "A tolerância de ±6% de BPM é adequada (nem rígida, nem permissiva demais).",
+      "As transições marcadas como 🔴 Arriscada realmente seriam difíceis de mixar.",
+      "A curva de energia ajuda a planejar a progressão do set (abertura → pico).",
+      "A escala de energia de 1 a 10 é útil para classificar as faixas.",
+      "A conversão de tom (ex.: Am → 8A, F#m → 11A) está correta para as músicas que conheço.",
+      "A importação da playlist do Rekordbox (.txt) funcionou (se você usa Rekordbox).",
+      "Eu usaria o HarmoniMix para preparar um set real.",
+      "O que falta para um DJ usar no dia a dia? (responda na coluna Observação)"
+    ]
+  },
+  {
+    "n": 4, "criterio": "Compatibilidade e celular", "arquivo": "Formulario-Testador-4-Compatibilidade-e-Celular",
+    "pergunta": "O sistema funciona bem em outros aparelhos, tamanhos de tela e navegadores?",
+    "perfil": "Alguém que vai testar principalmente pelo celular.",
+    "como": "Faça o roteiro de tarefas pelo celular. Depois abra o sistema num segundo navegador (no celular ou no computador). Anote o modelo do celular e os navegadores na Identificação.",
+    "itens": [
+      "O login e o cadastro funcionam no celular.",
+      "Nenhuma tela precisa ser arrastada para o lado (sem rolagem horizontal).",
+      "Os botões são grandes o suficiente para tocar com o dedo sem errar.",
+      "O menu do topo rola para os lados e todas as opções são alcançáveis.",
+      "O gráfico da curva de energia e a Roda de Camelot aparecem e dão para ler no celular.",
+      "Virar o celular na horizontal não quebra o layout.",
+      "Num segundo navegador, o sistema funciona igual. Qual? ________",
+      "Importar um CSV pelo celular funciona (se o celular permitir escolher o arquivo).",
+      "As páginas carregam rápido (menos de 3 segundos)."
+    ]
+  },
+  {
+    "n": 5, "criterio": "Robustez e segurança", "arquivo": "Formulario-Testador-5-Robustez-e-Seguranca",
+    "pergunta": "Dá para quebrar o sistema com dados errados ou ações inesperadas?",
+    "perfil": "Colega de TI (desenvolvimento, testes ou segurança).",
+    "como": "Seu papel é tentar fazer o sistema dar erro. Use dados inválidos, ações fora de ordem e tentativas de acessar o que não é seu. Use dados fictícios, nunca dados pessoais reais. Para cada item, anote o que digitou e o que aconteceu.",
+    "itens": [
+      "Campos vazios, só espaços e textos enormes (mais de 200 caracteres) no cadastro de faixa.",
+      "BPM com letras, negativo, 0, 59,99, 60, 200 e 200,01; duração 99:99 e 00:10.",
+      "Cadastrar a mesma faixa (mesmo título e artista) duas vezes.",
+      "Adicionar a mesma faixa duas vezes no mesmo setlist.",
+      "Importar CSV com linhas erradas, colunas faltando, arquivo vazio e um arquivo que não é CSV (.jpg, .mp3).",
+      "Digitar <script>alert(1)</script> no título de uma faixa e no nome de um setlist.",
+      "Copiar o endereço (URL) de um setlist, sair, criar outra conta e tentar abrir esse endereço.",
+      "Usar o botão Voltar do navegador depois de sair da conta ou de excluir algo.",
+      "Apertar F5 logo depois de enviar um formulário.",
+      "Cadastro com senha fraca, e-mail inválido e e-mail já usado."
+    ]
+  }
+]
