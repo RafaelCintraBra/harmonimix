@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HarmoniMix · Protótipo de Telas</title>
+<style>
+  :root{
+    --bg:#0e0f1d; --surface:#171830; --surface-2:#20223f; --border:#2c2e52;
+    --text:#ecedf5; --muted:#9a9cba; --accent:#8b5cf6; --accent-2:#22d3ee;
+    --ok:#22c55e; --warn:#eab308; --bad:#ef4444; --radius:12px;
+    --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.45}
+  a{color:var(--accent-2)}
+  .proto-bar{background:#000;color:#bbb;font-size:12px;padding:6px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .proto-bar b{color:#fff} .proto-bar a{color:#ccc;text-decoration:none;padding:2px 8px;border:1px solid #333;border-radius:20px}
+  .proto-bar a:hover{border-color:var(--accent)}
+  .screen{display:none} .screen.active{display:block}
+
+  /* ---------- Layout do app ---------- */
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 30px)}
+  .side{background:var(--surface);border-right:1px solid var(--border);padding:18px 14px}
+  .logo{font-weight:800;font-size:20px;letter-spacing:.3px;margin:0 0 22px 6px}
+  .logo span{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);text-decoration:none;margin-bottom:2px}
+  .nav a.on,.nav a:hover{background:var(--surface-2);color:var(--text)}
+  .nav a.on{box-shadow:inset 3px 0 0 var(--accent)}
+  .main{padding:22px 28px;min-width:0}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+  .top h1{font-size:22px;margin:0}
+  .crumb{color:var(--muted);font-size:13px;margin-bottom:2px}
+  .user{color:var(--muted);font-size:13px;display:flex;gap:10px;align-items:center}
+  .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .card h3{margin:0 0 10px;font-size:15px}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:1.6fr 1fr}
+  .stat .n{font-size:28px;font-weight:800} .stat .l{color:var(--muted);font-size:13px}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);padding:8px 14px;border-radius:8px;font:inherit;cursor:pointer;text-decoration:none}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .btn.sm{padding:4px 10px;font-size:13px}
+  .btn.danger{color:#fca5a5;border-color:#5b2330}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:9px 11px;border-radius:8px;font:inherit}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+  label{display:block;font-size:13px;color:var(--muted);margin:0 0 5px}
+  .field{margin-bottom:14px}
+  .field.err input,.field.err select{border-color:var(--bad)}
+  .msg-err{color:#fca5a5;font-size:13px;margin-top:5px}
+  .hint{color:var(--muted);font-size:12px;margin-top:4px}
+  .alert{padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:14px;display:flex;gap:8px}
+  .alert.ok{background:#0f2f1d;border:1px solid #1e6b3c;color:#a7f3c4}
+  .alert.bad{background:#341319;border:1px solid #7a2433;color:#fecaca}
+  .alert.info{background:#112634;border:1px solid #1f5470;color:#bae6fd}
+
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--border)}
+  td{padding:10px;border-bottom:1px solid var(--border);font-size:14px}
+  tr:hover td{background:#1b1c37}
+  .key{display:inline-block;min-width:38px;text-align:center;font-weight:700;padding:2px 8px;border-radius:6px;font-size:13px;color:#0e0f1d}
+  .tag{display:inline-block;padding:2px 8px;border-radius:20px;background:var(--surface-2);color:var(--muted);font-size:12px}
+  .muted{color:var(--muted)}
+  .energy{display:inline-flex;gap:2px}
+  .energy i{width:5px;height:12px;border-radius:2px;background:#33355e}
+  .energy i.on{background:var(--accent-2)}
+
+  /* ---------- Editor de setlist ---------- */
+  .track{display:grid;grid-template-columns:32px 1fr auto auto auto;gap:12px;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .pos{color:var(--muted);font-weight:700;text-align:center}
+  .t-title{font-weight:600} .t-art{color:var(--muted);font-size:13px}
+  .trans{margin:4px 0 4px 44px;font-size:13px;display:flex;align-items:center;gap:8px;padding:4px 0}
+  .trans::before{content:"";width:2px;height:22px;background:var(--border);margin-right:6px}
+  .badge{white-space:nowrap;display:inline-flex;gap:5px;align-items:center;font-weight:600;padding:2px 9px;border-radius:20px;font-size:12px}
+  .b-ok{background:#0f2f1d;color:#86efac;border:1px solid #1e6b3c}
+  .b-warn{background:#2f2a0c;color:#fde047;border:1px solid #6b5c14}
+  .b-bad{background:#341319;color:#fca5a5;border:1px solid #7a2433}
+  .score{font-size:40px;font-weight:800}
+  .sug{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .sug:last-child{border-bottom:0}
+  .icon-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;width:28px;height:28px;cursor:pointer}
+
+  /* ---------- Login ---------- */
+  .auth{min-height:calc(100vh - 30px);display:grid;place-items:center;padding:16px;
+        background:radial-gradient(800px 400px at 20% 10%,#2a1b55 0,transparent 60%),radial-gradient(600px 400px at 90% 90%,#0b3a46 0,transparent 60%),var(--bg)}
+  .auth .card{width:100%;max-width:380px;padding:28px}
+  .auth .logo{font-size:28px;text-align:center;margin:0 0 4px}
+  .auth p.sub{text-align:center;color:var(--muted);margin:0 0 22px}
+
+  @media (max-width: 860px){
+    .app{grid-template-columns:1fr}
+    .side{border-right:0;border-bottom:1px solid var(--border);padding:10px 16px}
+    .logo{margin:0 0 8px}
+    .nav{display:flex;overflow-x:auto;gap:4px}
+    .nav a{white-space:nowrap}
+    .main{padding:16px}
+    .g4{grid-template-columns:repeat(2,1fr)} .g2{grid-template-columns:1fr}
+    .track{grid-template-columns:26px 1fr auto;}
+    .track .hide-m{display:none}
+    .table-wrap{overflow-x:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <b>PROTÓTIPO HarmoniMix v2.0</b> · navegue pelas telas:
+  <a href="#login">T01 Login</a><a href="#cadastro">T02 Cadastro</a><a href="#painel">T03 Painel</a>
+  <a href="#biblioteca">T04 Biblioteca</a><a href="#faixa">T05 Faixa (erro)</a><a href="#setlists">T06 Setlists</a>
+  <a href="#editor">T07 Editor de setlist</a><a href="#camelot">T08 Roda de Camelot</a>
+</div>
+
+<!-- ===================== T01 LOGIN ===================== -->
+<section class="screen" id="s-login">
+  <div class="auth">
+    <div class="card">
+      <h1 class="logo"><span>HarmoniMix</span></h1>
+      <p class="sub">Monte setlists que combinam 🎧</p>
+      <div class="alert bad" role="alert">⚠️ E-mail ou senha incorretos. Verifique os dados e tente novamente.</div>
+      <div class="field"><label for="le">E-mail</label><input id="le" type="email" value="demo@harmonimix.dev"></div>
+      <div class="field"><label for="ls">Senha</label><input id="ls" type="password" value="12345678"></div>
+      <a class="btn primary" style="width:100%;justify-content:center" href="#painel">Entrar</a>
+      <p class="muted" style="text-align:center;font-size:13px;margin:16px 0 0">Ainda não tem conta? <a href="#cadastro">Crie agora</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== T02 CADASTRO ===================== -->
+<section class="screen" id="s-cadastro">
+  <div class="auth">
+    <div class="card">
+      <h1 class="logo"><span>HarmoniMix</span></h1>
+      <p class="sub">Crie a sua conta gratuita</p>
+      <div class="field"><label>Nome completo *</label><input value="Lucas Andrade"></div>
+      <div class="field"><label>Nome artístico</label><input value="DJ Lucca"><div class="hint">Opcional. Aparece no topo do sistema.</div></div>
+      <div class="field"><label>E-mail *</label><input value="lucas@email.com"></div>
+      <div class="field err"><label>Senha *</label><input type="password" value="abc">
+        <div class="msg-err">A senha deve ter pelo menos 8 caracteres, com letras e números.</div></div>
+      <div class="field"><label>Confirmar senha *</label><input type="password" value="abc"></div>
+      <a class="btn primary" style="width:100%;justify-content:center" href="#painel">Criar conta</a>
+      <p class="muted" style="text-align:center;font-size:13px;margin:16px 0 0">Já tem conta? <a href="#login">Entrar</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- Template do menu (inserido por JS em cada tela interna) -->
+<template id="sidebar">
+  <aside class="side">
+    <div class="logo"><span>HarmoniMix</span></div>
+    <nav class="nav">
+      <a data-k="painel" href="#painel">🏠 Painel</a>
+      <a data-k="biblioteca" href="#biblioteca">🎵 Biblioteca</a>
+      <a data-k="setlists" href="#setlists">📋 Setlists</a>
+      <a data-k="eventos" href="#setlists">📅 Eventos</a>
+      <a data-k="camelot" href="#camelot">🎡 Roda de Camelot</a>
+      <a href="#login">↩ Sair</a>
+    </nav>
+  </aside>
+</template>
+
+<!-- ===================== T03 PAINEL ===================== -->
+<section class="screen" id="s-painel" data-nav="painel">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início</div><h1>Olá, DJ Demo 👋</h1></div>
+      <div class="user"><div class="avatar">DD</div>DJ Demo</div></div>
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="card stat"><div class="n">18</div><div class="l">faixas na biblioteca</div></div>
+      <div class="card stat"><div class="n">2</div><div class="l">setlists</div></div>
+      <div class="card stat"><div class="n">121,8</div><div class="l">BPM médio da biblioteca</div></div>
+      <div class="card stat"><div class="n">1</div><div class="l">evento agendado</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Setlists recentes</h3>
+        <table><tr><th>Setlist</th><th>Faixas</th><th>Duração</th><th>Harmonia</th></tr>
+          <tr><td><a href="#editor">Warm-up até o pico</a></td><td>9</td><td>54:42</td><td><span class="badge b-ok">🟢 100%</span></td></tr>
+          <tr><td><a href="#editor">Rascunho: precisa revisar</a></td><td>5</td><td>27:17</td><td><span class="badge b-bad">🔴 25%</span></td></tr>
+        </table></div>
+      <div class="card"><h3>Próximos eventos</h3>
+        <div class="row" style="justify-content:space-between"><div><b>Formatura Engenharia 2026</b><div class="muted" style="font-size:13px">12/12/2026 · Espaço Villa Verde</div></div><span class="tag">em 26 dias</span></div>
+        <hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
+        <div class="row"><a class="btn primary" href="#faixa">+ Nova faixa</a><a class="btn" href="#setlists">+ Novo setlist</a></div>
+      </div>
+    </div>
+  </main></div>
+</section>
+
+<!-- ===================== T04 BIBLIOTECA ===================== -->
+<section class="screen" id="s-biblioteca" data-nav="biblioteca">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início › Biblioteca</div><h1>Biblioteca de faixas</h1></div>
+      <a class="btn primary" href="#faixa">+ Nova faixa</a></div>
+    <div class="alert ok">✅ Faixa “Cidade Acesa” cadastrada com sucesso.</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="grid" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;align-items:end" id="filtros">
+        <div><label>Buscar</label><input placeholder="Título ou artista…"></div>
+        <div><label>Gênero</label><select><option>Todos</option><option>House</option><option>Techno</option></select></div>
+        <div><label>Tom</label><select><option>Todos</option><option>8A</option></select></div>
+        <div><label>BPM mín.</label><input value="115"></div>
+        <div><label>BPM máx.</label><input value="130"></div>
+        <button class="btn">Filtrar</button>
+      </div>
+    </div>
+    <div class="card table-wrap">
+      <table id="tbl-bib"><thead><tr><th>Título</th><th>Artista</th><th>BPM</th><th>Tom</th><th>Gênero</th><th>Energia</th><th>Duração</th><th></th></tr></thead><tbody></tbody></table>
+      <div class="row muted" style="justify-content:space-between;margin-top:12px;font-size:13px"><span>Mostrando 8 de 14 faixas filtradas</span><span>‹ 1 2 ›</span></div>
+    </div>
+  </main></div>
+</section>
+
+<!-- ===================== T05 FORMULÁRIO DE FAIXA ===================== -->
+<section class="screen" id="s-faixa" data-nav="biblioteca">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início › Biblioteca › Nova faixa</div><h1>Nova faixa</h1></div></div>
+    <div class="card" style="max-width:720px">
+      <div class="alert bad" role="alert">⚠️ Corrija os 2 campos destacados para salvar a faixa.</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div class="field"><label>Título *</label><input value="Cidade Acesa"></div>
+        <div class="field"><label>Artista *</label><input value="DJ Lumi"></div>
+        <div class="field err"><label>BPM *</label><input value="250"><div class="msg-err">O BPM deve estar entre 60 e 200.</div></div>
+        <div class="field err"><label>Tom (Camelot) *</label><select><option>Selecione…</option></select>
+          <div class="msg-err">Selecione o tom da faixa. <a href="#camelot">Não sabe? Veja a Roda de Camelot</a></div></div>
+        <div class="field"><label>Gênero</label><select><option>House</option></select></div>
+        <div class="field"><label>Duração (mm:ss) *</label><input value="05:00"><div class="hint">Ex.: 06:12</div></div>
+        <div class="field" style="grid-column:1/-1"><label>Energia: <b>6</b> / 10</label><input type="range" min="1" max="10" value="6"><div class="hint">1 = calma (abertura) · 10 = pico da pista</div></div>
+      </div>
+      <div class="row"><button class="btn primary">Salvar faixa</button><a class="btn" href="#biblioteca">Cancelar</a></div>
+    </div>
+  </main></div>
+</section>
+
+<!-- ===================== T06 SETLISTS ===================== -->
+<section class="screen" id="s-setlists" data-nav="setlists">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início › Setlists</div><h1>Meus setlists</h1></div></div>
+    <div class="grid g2">
+      <div class="card table-wrap"><h3>Setlists</h3>
+        <table><tr><th>Nome</th><th>Evento</th><th>Faixas</th><th>Duração</th><th>Harmonia</th><th></th></tr>
+          <tr><td><a href="#editor">Warm-up até o pico</a></td><td>Formatura Engenharia 2026</td><td>9</td><td>54:42</td><td><span class="badge b-ok">🟢 100%</span></td><td><a class="btn sm" href="#editor">Abrir</a></td></tr>
+          <tr><td><a href="#editor">Rascunho: precisa revisar</a></td><td class="muted">—</td><td>5</td><td>27:17</td><td><span class="badge b-bad">🔴 25%</span></td><td><a class="btn sm" href="#editor">Abrir</a></td></tr>
+        </table></div>
+      <div class="card"><h3>Novo setlist</h3>
+        <div class="field"><label>Nome *</label><input placeholder="Ex.: Abertura do casamento"></div>
+        <div class="field"><label>Evento (opcional)</label><select><option>Nenhum</option><option>Formatura Engenharia 2026 · 12/12/2026</option></select></div>
+        <div class="field"><label>Descrição</label><textarea rows="2"></textarea></div>
+        <button class="btn primary">Criar e abrir editor</button>
+      </div>
+    </div>
+  </main></div>
+</section>
+
+<!-- ===================== T07 EDITOR DE SETLIST ===================== -->
+<section class="screen" id="s-editor" data-nav="setlists">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início › Setlists › Rascunho: precisa revisar</div><h1>Rascunho: precisa revisar</h1></div>
+      <div class="row"><a class="btn sm" href="#setlists">Renomear</a><a class="btn sm danger" href="#setlists">Excluir setlist</a></div></div>
+
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="card stat"><div class="n">5</div><div class="l">faixas</div></div>
+      <div class="card stat"><div class="n">27:17</div><div class="l">duração total</div></div>
+      <div class="card stat"><div class="n">125,8</div><div class="l">BPM médio</div></div>
+      <div class="card stat"><div class="n" style="color:var(--bad)">25%</div><div class="l">pontuação harmônica (1 de 4 suaves)</div></div>
+    </div>
+
+    <div class="grid g2">
+      <div>
+        <div class="card" style="margin-bottom:14px"><h3>Ordem do set</h3><div id="set-list"></div></div>
+        <div class="card"><h3>Curva de energia</h3><div id="chart"></div>
+          <div class="row muted" style="font-size:12px;margin-top:6px"><span>━ <b style="color:var(--accent-2)">BPM</b></span><span>▮ <b style="color:var(--accent)">Energia (1–10)</b></span></div></div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px"><h3>💡 Sugestões para depois de “Maré Alta” (9A · 120 BPM)</h3>
+          <div class="sug"><div><b>Batida Urbana</b> <span class="muted">· Kaleo Beats</span><div style="font-size:13px"><span class="key" style="background:#7dd3fc">10A</span> vizinho · 124 BPM <span class="muted">(+3,3%)</span></div></div><button class="btn sm primary">+ Adicionar</button></div>
+          <div class="sug"><div><b>Neon Copacabana</b> <span class="muted">· Rio Pulse</span><div style="font-size:13px"><span class="key" style="background:#86efac">9B</span> relativo · 122 BPM <span class="muted">(+1,7%)</span></div></div><button class="btn sm primary">+ Adicionar</button></div>
+          <p class="muted" style="font-size:12px;margin:10px 0 0">Mostrando faixas com tom compatível e BPM até ±6%. <a href="#camelot">Como funciona?</a></p>
+        </div>
+        <div class="card"><h3>Adicionar outra faixa</h3>
+          <div class="field"><input placeholder="🔍 Buscar na biblioteca…" value="Pon"></div>
+          <div class="sug"><div><b>Ponto Final</b> <span class="muted">· Nébula 9</span><div style="font-size:13px"><span class="key" style="background:#f9a8d4">1B</span> 128 BPM</div></div><button class="btn sm">+ Adicionar</button></div>
+          <div class="alert info" style="margin:10px 0 0">ℹ️ “Ponto Final” não é compatível com a última faixa. Você pode adicionar, mas a transição será marcada como 🔴.</div>
+        </div>
+      </div>
+    </div>
+  </main></div>
+</section>
+
+<!-- ===================== T08 RODA DE CAMELOT ===================== -->
+<section class="screen" id="s-camelot" data-nav="camelot">
+  <div class="app"><div class="side-slot"></div>
+  <main class="main">
+    <div class="top"><div><div class="crumb">Início › Ajuda</div><h1>Roda de Camelot</h1></div></div>
+    <div class="grid g2">
+      <div class="card" style="display:grid;place-items:center"><div id="wheel" style="width:100%;max-width:440px"></div>
+        <div class="row" style="margin-top:8px"><label style="margin:0">Clique em um tom:</label><span class="muted">selecionado <b id="selk" style="color:#fff">8A</b></span></div></div>
+      <div class="card"><h3>Como combinar faixas</h3>
+        <p>Cada música tem um <b>tom</b>. A roda organiza os 24 tons de forma que <b>vizinhos combinam</b>.</p>
+        <ul>
+          <li><span class="badge b-ok">mesmo tom</span> 8A → 8A: combinação perfeita</li>
+          <li><span class="badge b-ok">vizinho</span> 8A → 7A ou 9A: sobe/desce um "degrau"</li>
+          <li><span class="badge b-ok">relativo</span> 8A ↔ 8B: muda o clima (menor ↔ maior)</li>
+        </ul>
+        <p><b>Anel interno (A):</b> tons menores, mais densos e emotivos.<br><b>Anel externo (B):</b> tons maiores, mais alegres.</p>
+        <p><b>BPM:</b> mantenha a diferença em até <b>±6%</b> entre faixas seguidas.</p>
+        <table><tr><th>Transição</th><th>Significado</th></tr>
+          <tr><td><span class="badge b-ok">🟢 Suave</span></td><td>tom compatível e BPM até 6%</td></tr>
+          <tr><td><span class="badge b-warn">🟡 Atenção</span></td><td>só um dos dois critérios</td></tr>
+          <tr><td><span class="badge b-bad">🔴 Arriscada</span></td><td>tom incompatível e BPM acima de 6%</td></tr></table>
+      </div>
+    </div>
+  </main></div>
+</section>
+
+<script>
+/* ---------- Dados fictícios do protótipo ---------- */
+const KEYCOLOR = n => `hsl(${(n-1)*30} 85% 72%)`;
+const keyBadge = k => `<span class="key" style="background:${KEYCOLOR(parseInt(k))}">${k}</span>`;
+const bars = e => `<span class="energy" title="Energia ${e}/10">${Array.from({length:10},(_,i)=>`<i class="${i<e?'on':''}"></i>`).join('')}</span>`;
+
+const bib = [
+ ["Aurora Boreal","Lumen Drift",118,"8A","Deep House",4,"06:12"],
+ ["Maré Alta","Coral Sound",120,"9A","Deep House",5,"05:45"],
+ ["Garoa Paulista","Coral Sound",121,"7A","Deep House",5,"05:30"],
+ ["Neon Copacabana","Rio Pulse",122,"9B","House",6,"05:30"],
+ ["Cidade Acesa","DJ Lumi",123,"8B","House",6,"05:00"],
+ ["Batida Urbana","Kaleo Beats",124,"10A","Tech House",7,"05:18"],
+ ["Concreto","Kaleo Beats",125,"11A","Tech House",7,"05:42"],
+ ["Eletricidade","Volt Sisters",126,"11B","Techno",8,"06:30"]];
+document.querySelector('#tbl-bib tbody').innerHTML = bib.map(f=>`<tr><td><b>${f[0]}</b></td><td class="muted">${f[1]}</td><td>${f[2]}</td><td>${keyBadge(f[3])}</td><td><span class="tag">${f[4]}</span></td><td>${bars(f[5])}</td><td>${f[6]}</td><td class="row" style="flex-wrap:nowrap"><button class="btn sm">Editar</button><button class="btn sm danger">Excluir</button></td></tr>`).join('');
+
+const set = [
+ ["Garoa Paulista","Coral Sound",121,"7A",5,"05:30"],
+ ["Aurora Boreal","Lumen Drift",118,"8A",4,"06:12"],
+ ["Funk do Satélite","MC Órbita",130,"5A",9,"03:00"],
+ ["Céu de Néon","Nébula 9",140,"6A",8,"06:50"],
+ ["Maré Alta","Coral Sound",120,"9A",5,"05:45"]];
+const trans = [
+ ["b-ok","🟢 Suave","7A → 8A vizinho · BPM −2,5%"],
+ ["b-bad","🔴 Arriscada","Tom incompatível (8A → 5A) · BPM +10,2% (acima de 6%)"],
+ ["b-warn","🟡 Atenção","6A é vizinho de 5A ✓ · mas BPM +7,7% (acima de 6%)"],
+ ["b-bad","🔴 Arriscada","Tom incompatível (6A → 9A) · BPM −14,3% (acima de 6%)"]];
+document.getElementById('set-list').innerHTML = set.map((f,i)=>`
+  <div class="track"><div class="pos">${i+1}</div>
+    <div><div class="t-title">${f[0]}</div><div class="t-art">${f[1]} · ${f[5]}</div></div>
+    <div>${keyBadge(f[3])}</div><div class="hide-m">${f[2]} BPM</div>
+    <div class="row" style="gap:4px;flex-wrap:nowrap"><button class="icon-btn" title="Subir">▲</button><button class="icon-btn" title="Descer">▼</button><button class="icon-btn" title="Remover">✕</button></div></div>
+  ${i<trans.length?`<div class="trans"><span class="badge ${trans[i][0]}">${trans[i][1]}</span><span class="muted">${trans[i][2]}</span></div>`:''}`).join('');
+
+/* ---------- Gráfico da curva de energia (SVG puro) ---------- */
+(function(){
+  const W=560,H=200,P=34, n=set.length, bpmMin=100,bpmMax=150;
+  const x=i=>P+i*(W-2*P)/(n-1), yb=b=>H-P-(b-bpmMin)/(bpmMax-bpmMin)*(H-2*P), ye=e=>H-P-e/10*(H-2*P);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Gráfico de BPM e energia por posição">`;
+  [100,110,120,130,140,150].forEach(b=>{s+=`<line x1="${P}" x2="${W-P}" y1="${yb(b)}" y2="${yb(b)}" stroke="#2c2e52"/><text x="4" y="${yb(b)+4}" fill="#9a9cba" font-size="11">${b}</text>`});
+  [0,5,10].forEach(e=>{s+=`<text x="${W-4}" y="${ye(e)+4}" fill="#8b5cf6" font-size="11" text-anchor="end">${e}</text>`});
+  set.forEach((f,i)=>{const bw=26; s+=`<rect x="${x(i)-bw/2}" y="${ye(f[4])}" width="${bw}" height="${H-P-ye(f[4])}" rx="4" fill="#8b5cf6" opacity=".45"/><text x="${x(i)}" y="${H-12}" fill="#9a9cba" font-size="11" text-anchor="middle">${i+1}</text>`});
+  s+=`<polyline fill="none" stroke="#22d3ee" stroke-width="3" points="${set.map((f,i)=>x(i)+','+yb(f[2])).join(' ')}"/>`;
+  set.forEach((f,i)=>{s+=`<circle cx="${x(i)}" cy="${yb(f[2])}" r="5" fill="#22d3ee"/><text x="${x(i)}" y="${yb(f[2])-10}" fill="#ecedf5" font-size="11" text-anchor="middle">${f[2]}</text>`});
+  document.getElementById('chart').innerHTML=s+'</svg>';
+})();
+
+/* ---------- Roda de Camelot (SVG gerado) ---------- */
+function drawWheel(sel){
+  const C=220,R1=210,R2=145,R3=80; let s=`<svg viewBox="0 0 440 440" width="100%">`;
+  const num=parseInt(sel), mode=sel.slice(-1);
+  const compat=k=>{const n=parseInt(k),m=k.slice(-1);if(k===sel)return 2;if(m===mode&&(Math.abs(n-num)===1||Math.abs(n-num)===11))return 1;if(n===num)return 1;return 0};
+  const arc=(r0,r1,a0,a1)=>{const p=(r,a)=>[C+r*Math.sin(a),C-r*Math.cos(a)];const[a,b]=p(r1,a0),[c,d]=p(r1,a1),[e,f]=p(r0,a1),[g,h]=p(r0,a0);return `M${a},${b}A${r1},${r1} 0 0 1 ${c},${d}L${e},${f}A${r0},${r0} 0 0 0 ${g},${h}Z`};
+  for(let i=1;i<=12;i++){
+    const a0=(i*30-15)*Math.PI/180  /* 12 no topo, como no padrão Camelot */,a1=a0+30*Math.PI/180,am=(a0+a1)/2;
+    [["B",R2,R1,(R1+R2)/2],["A",R3,R2,(R2+R3)/2]].forEach(([m,r0,r1,rt])=>{
+      const k=i+m,c=compat(k),fill=c?KEYCOLOR(i):'#20223f',op=c?1:.9;
+      s+=`<path d="${arc(r0,r1,a0,a1)}" fill="${fill}" opacity="${op}" stroke="#0e0f1d" stroke-width="3" style="cursor:pointer" onclick="drawWheel('${k}')"/>`;
+      s+=`<text x="${C+rt*Math.sin(am)}" y="${C-rt*Math.cos(am)+5}" text-anchor="middle" font-size="${c===2?18:15}" font-weight="700" fill="${c?'#0e0f1d':'#9a9cba'}" style="pointer-events:none">${k}</text>`;
+    });
+  }
+  s+=`<circle cx="${C}" cy="${C}" r="${R3-4}" fill="#171830"/><text x="${C}" y="${C-4}" text-anchor="middle" fill="#ecedf5" font-size="26" font-weight="800">${sel}</text><text x="${C}" y="${C+18}" text-anchor="middle" fill="#9a9cba" font-size="12">${mode==='A'?'menor':'maior'}</text></svg>`;
+  document.getElementById('wheel').innerHTML=s; document.getElementById('selk').textContent=sel;
+}
+drawWheel('8A');
+
+/* ---------- Navegação entre telas ---------- */
+const sb=document.getElementById('sidebar');
+document.querySelectorAll('.side-slot').forEach(sl=>{const n=sb.content.cloneNode(true);const k=sl.closest('.screen').dataset.nav;n.querySelectorAll('a[data-k]').forEach(a=>{if(a.dataset.k===k)a.classList.add('on')});sl.replaceWith(n)});
+function show(){const id=(location.hash||'#login').slice(1);document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id==='s-'+id));window.scrollTo(0,0)}
+window.addEventListener('hashchange',show); show();
+</script>
+</body>
+</html>
