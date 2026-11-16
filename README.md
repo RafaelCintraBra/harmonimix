@@ -17,7 +17,23 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 |-------|----------|--------|
 | [`situacao-1-planejamento/`](situacao-1-planejamento/) | Escopo, requisitos, UML, IHC e protótipo, banco de dados (conceitual, lógico, físico) e dicionário de dados | ✅ v2.0 |
 | [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), 217 testes (99% de cobertura), manual de uso, roteiro do vídeo | ✅ |
-| [`situacao-3-validacao/`](situacao-3-validacao/) | Plano e relatório de testes, formulário de teste com usuários, feedbacks e correções | ⏳ |
+| [`situacao-3-validacao/`](situacao-3-validacao/) | Plano de testes (Modelo V), 15 testes de sistema no navegador, verificação e rastreabilidade, formulário para 5 testadores, registro de correções | ✅ testes · ⏳ testadores |
+
+## ✅ Qualidade
+
+| Nível de teste | Testes | Resultado |
+|----------------|:------:|:---------:|
+| Unitário | 152 | ✅ |
+| Integração e segurança (SQLite e MariaDB) | 65 | ✅ |
+| Sistema (navegador real, Playwright) | 15 | ✅ |
+| Aceitação (5 usuários) | — | ⏳ |
+
+Cobertura de código: **99%** · Defeitos encontrados e corrigidos: **7** ([registro](situacao-3-validacao/correcoes/REGISTRO-DE-CORRECOES.md))
+
+## 🎬 Vídeos
+
+- Demonstração: *(link)*
+- Mudanças adotadas após os testes: *(link)*
 
 ## 🛠️ Tecnologias
 

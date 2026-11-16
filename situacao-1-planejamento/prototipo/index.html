@@ -92,7 +92,8 @@
   .auth p.sub{text-align:center;color:var(--muted);margin:0 0 22px}
 
   @media (max-width: 860px){
-    .app{grid-template-columns:1fr}
+    .app{grid-template-columns:minmax(0,1fr)}  /* minmax(0,…): o menu rolável não alarga a página */
+    .side,.main,.grid>*{min-width:0}
     .side{border-right:0;border-bottom:1px solid var(--border);padding:10px 16px}
     .logo{margin:0 0 8px}
     .nav{display:flex;overflow-x:auto;gap:4px}

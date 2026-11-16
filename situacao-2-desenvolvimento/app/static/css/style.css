@@ -82,7 +82,8 @@
   .auth p.sub{text-align:center;color:var(--muted);margin:0 0 22px}
 
   @media (max-width: 860px){
-    .app{grid-template-columns:1fr}
+    .app{grid-template-columns:minmax(0,1fr)}  /* minmax(0,…): o menu rolável não alarga a página */
+    .side,.main,.grid>*{min-width:0}
     .side{border-right:0;border-bottom:1px solid var(--border);padding:10px 16px}
     .logo{margin:0 0 8px}
     .nav{display:flex;overflow-x:auto;gap:4px}
@@ -97,6 +98,7 @@
   /* ---------- Acréscimos da aplicação ---------- */
   input[type=range]{accent-color:var(--accent);padding:0;border:0;background:none}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .table-wrap{position:relative}  /* prende o .sr-only dentro da área rolável da tabela */
   .nav form{margin:0} .nav button.linklike{all:unset;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);cursor:pointer;width:100%;box-sizing:border-box}
   .nav button.linklike:hover{background:var(--surface-2);color:var(--text)}
   .inline{display:inline} .inline form{display:inline}
