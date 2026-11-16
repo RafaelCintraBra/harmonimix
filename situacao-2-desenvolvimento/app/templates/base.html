@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{% endblock %} · HarmoniMix</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% from "_macros.html" import csrf, mensagens %}
+
+
+{% if g.usuario and not sem_menu %}
+  {% set atual = request.blueprint %}
+  <div class="app">
+    <aside class="side">
+      <div class="logo"><span>HarmoniMix</span></div>
+      <nav class="nav" aria-label="Menu principal">
+        <a href="{{ url_for('painel.inicio') }}" class="{{ 'on' if atual == 'painel' }}">🏠 Painel</a>
+        <a href="{{ url_for('faixas.listar') }}" class="{{ 'on' if atual == 'faixas' }}">🎵 Biblioteca</a>
+        <a href="{{ url_for('setlists.listar') }}" class="{{ 'on' if atual == 'setlists' }}">📋 Setlists</a>
+        <a href="{{ url_for('eventos.listar') }}" class="{{ 'on' if atual == 'eventos' }}">📅 Eventos</a>
+        <a href="{{ url_for('ajuda.camelot') }}" class="{{ 'on' if atual == 'ajuda' }}">🎡 Roda de Camelot</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">{{ csrf() }}
+          <button class="linklike" type="submit">↩ Sair</button></form>
+      </nav>
+    </aside>
+    <main class="main" id="conteudo">
+      <div class="top">
+        <div>
+          <div class="crumb">{% block trilha %}Início{% endblock %}</div>
+          <h1>{% block cabecalho %}{{ self.titulo() }}{% endblock %}</h1>
+        </div>
+        <div class="row">
+          {% block acoes %}{% endblock %}
+          <div class="user"><div class="avatar" aria-hidden="true">{{ g.usuario.iniciais }}</div>{{ g.usuario.nome_exibicao }}</div>
+        </div>
+      </div>
+      {{ mensagens() }}
+      {% block conteudo %}{% endblock %}
+    </main>
+  </div>
+{% else %}
+  {% block pagina_publica %}{% endblock %}
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

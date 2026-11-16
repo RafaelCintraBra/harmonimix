@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Roda de Camelot{% endblock %}
+{% block trilha %}Início › Ajuda{% endblock %}
+{% block conteudo %}
+<div class="grid g2">
+  <div class="card" style="display:grid;place-items:center">
+    <div id="roda-camelot" style="width:100%;max-width:440px" data-tom="{{ tom }}"
+         data-compativeis='{{ compativeis|tojson }}' data-url="{{ url_for('ajuda.camelot') }}"></div>
+    <p class="muted" style="margin:8px 0 0">Clique em um tom. Combina com <b style="color:var(--text)">{{ tom }}</b>: {{ compativeis|join(', ') }}</p>
+  </div>
+  <div class="card"><h3>Como combinar faixas</h3>
+    <p>Cada música tem um <b>tom</b>. A roda organiza os 24 tons de forma que <b>vizinhos combinam</b>.</p>
+    <ul>
+      <li><span class="badge b-ok">mesmo tom</span> 8A → 8A: combinação perfeita</li>
+      <li><span class="badge b-ok">vizinho</span> 8A → 7A ou 9A: sobe/desce um "degrau" (12 é vizinho de 1)</li>
+      <li><span class="badge b-ok">relativo</span> 8A ↔ 8B: muda o clima (menor ↔ maior)</li>
+    </ul>
+    <p><b>Anel interno (A):</b> tons menores, mais densos e emotivos.<br><b>Anel externo (B):</b> tons maiores, mais alegres.</p>
+    <p><b>BPM:</b> mantenha a diferença em até <b>±{{ tolerancia|int }}%</b> entre faixas seguidas.</p>
+    <table><thead><tr><th>Transição</th><th>Significado</th></tr></thead><tbody>
+      <tr><td><span class="badge b-ok">🟢 Suave</span></td><td>tom compatível e BPM até {{ tolerancia|int }}%</td></tr>
+      <tr><td><span class="badge b-warn">🟡 Atenção</span></td><td>só um dos dois critérios</td></tr>
+      <tr><td><span class="badge b-bad">🔴 Arriscada</span></td><td>tom incompatível e BPM acima de {{ tolerancia|int }}%</td></tr></tbody></table>
+    <details style="margin-top:14px"><summary>Tabela de tons (Camelot ↔ nome musical)</summary>
+      <table style="margin-top:8px"><tbody>
+      {% for t in tons %}{% if loop.index is odd %}<tr>{% endif %}<td><a href="{{ url_for('ajuda.camelot', tom=t.codigo) }}"><b>{{ t.codigo }}</b></a></td><td class="muted">{{ t.nome_musical }}</td>{% if loop.index is even %}</tr>{% endif %}{% endfor %}
+      </tbody></table>
+    </details>
+  </div>
+</div>
+{% endblock %}

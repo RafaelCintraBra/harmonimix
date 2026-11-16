@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, mensagens %}
+{% block titulo %}Entrar{% endblock %}
+{% block pagina_publica %}
+<div class="auth">
+  <form class="card" method="post" novalidate>
+    {{ csrf() }}
+    <h1 class="logo"><span>HarmoniMix</span></h1>
+    <p class="sub">Monte setlists que combinam 🎧</p>
+    {{ mensagens() }}
+    <div class="field"><label for="f-email">E-mail</label>
+      <input id="f-email" name="email" type="email" value="{{ email }}" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="f-senha">Senha</label>
+      <input id="f-senha" name="senha" type="password" autocomplete="current-password" required></div>
+    <button class="btn primary" style="width:100%;justify-content:center" type="submit">Entrar</button>
+    <p class="muted" style="text-align:center;font-size:13px;margin:16px 0 0">Ainda não tem conta? <a href="{{ url_for('auth.cadastro') }}">Crie agora</a></p>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_macros.html" import tom, energia, csrf %}
+{% block titulo %}Biblioteca{% endblock %}
+{% block cabecalho %}Biblioteca de faixas{% endblock %}
+{% block trilha %}Início › Biblioteca{% endblock %}
+{% block acoes %}
+  <a class="btn" href="{{ url_for('faixas.importar') }}">⬆ Importar CSV</a>
+  <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Nova faixa</a>
+{% endblock %}
+{% block conteudo %}
+<form class="card" method="get" style="margin-bottom:14px" role="search">
+  <div class="grid filtros" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;align-items:end">
+    <div><label for="q">Buscar</label><input id="q" name="q" value="{{ filtros.q }}" placeholder="Título ou artista…"></div>
+    <div><label for="genero">Gênero</label>
+      <select id="genero" name="genero"><option value="">Todos</option>
+        {% for gen in generos %}<option value="{{ gen.id }}" {{ 'selected' if filtros.genero == gen.id|string }}>{{ gen.nome }}</option>{% endfor %}
+      </select></div>
+    <div><label for="tom">Tom</label>
+      <select id="tom" name="tom"><option value="">Todos</option>
+        {% for t in tons %}<option value="{{ t.codigo }}" {{ 'selected' if filtros.tom|upper == t.codigo }}>{{ t.codigo }}</option>{% endfor %}
+      </select></div>
+    <div><label for="bpm_min">BPM mín.</label><input id="bpm_min" name="bpm_min" inputmode="decimal" value="{{ filtros.bpm_min }}"></div>
+    <div><label for="bpm_max">BPM máx.</label><input id="bpm_max" name="bpm_max" inputmode="decimal" value="{{ filtros.bpm_max }}"></div>
+    <div class="row" style="flex-wrap:nowrap"><button class="btn" type="submit">Filtrar</button>
+      {% if filtros.values()|select|list %}<a class="btn" href="{{ url_for('faixas.listar') }}" title="Limpar filtros">✕</a>{% endif %}</div>
+  </div>
+  <input type="hidden" name="ordem" value="{{ ordem }}">
+</form>
+
+<div class="card table-wrap">
+  {% if pagina.items %}
+  {% macro col(chave, rotulo) -%}
+    <a class="{{ 'on' if ordem == chave }}" href="{{ url_for('faixas.listar', ordem=chave, **filtros) }}">{{ rotulo }}{{ ' ▾' if ordem == chave }}</a>
+  {%- endmacro %}
+  <table>
+    <thead><tr><th>{{ col('titulo', 'Título') }}</th><th>{{ col('artista', 'Artista') }}</th><th>{{ col('bpm', 'BPM') }}</th>
+      <th>{{ col('tom', 'Tom') }}</th><th>Gênero</th><th>{{ col('energia', 'Energia') }}</th><th>Duração</th><th><span class="sr-only">Ações</span></th></tr></thead>
+    <tbody>
+    {% for f in pagina.items %}
+      <tr>
+        <td><b>{{ f.titulo }}</b></td><td class="muted">{{ f.artista }}</td><td>{{ f.bpm_fmt }}</td>
+        <td>{{ tom(f.cod_tom) }}</td><td>{% if f.genero %}<span class="tag">{{ f.genero.nome }}</span>{% endif %}</td>
+        <td>{{ energia(f.energia) }}</td><td>{{ f.duracao_fmt }}</td>
+        <td><div class="row" style="flex-wrap:nowrap;gap:6px">
+          <a class="btn sm" href="{{ url_for('faixas.editar', id_faixa=f.id) }}">Editar</a>
+          <form class="inline" method="post" action="{{ url_for('faixas.excluir', id_faixa=f.id) }}"
+                data-confirm="Tem certeza que deseja excluir “{{ f.titulo }}”? Esta ação não pode ser desfeita.">
+            {{ csrf() }}<button class="btn sm danger" type="submit">Excluir</button></form>
+        </div></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="row muted" style="justify-content:space-between;margin-top:12px;font-size:13px">
+    <span>Mostrando {{ pagina.items|length }} de {{ pagina.total }} faixa(s){% if pagina.total != total_biblioteca %} filtradas · {{ total_biblioteca }} na biblioteca{% endif %}</span>
+    {% if pagina.pages > 1 %}
+    <nav class="pager" aria-label="Paginação">
+      {% if pagina.has_prev %}<a href="{{ url_for('faixas.listar', pagina=pagina.prev_num, ordem=ordem, **filtros) }}">‹</a>{% endif %}
+      {% for p in pagina.iter_pages() %}
+        {% if p %}{% if p == pagina.page %}<span class="on">{{ p }}</span>{% else %}<a href="{{ url_for('faixas.listar', pagina=p, ordem=ordem, **filtros) }}">{{ p }}</a>{% endif %}
+        {% else %}<span>…</span>{% endif %}
+      {% endfor %}
+      {% if pagina.has_next %}<a href="{{ url_for('faixas.listar', pagina=pagina.next_num, ordem=ordem, **filtros) }}">›</a>{% endif %}
+    </nav>
+    {% endif %}
+  </div>
+  {% elif total_biblioteca %}
+    <div class="empty"><div class="big">🔍</div>Nenhuma faixa encontrada com esses filtros.
+      <div style="margin-top:10px"><a class="btn" href="{{ url_for('faixas.listar') }}">Limpar filtros</a></div></div>
+  {% else %}
+    <div class="empty"><div class="big">🎵</div>Sua biblioteca está vazia.
+      <div class="row" style="justify-content:center;margin-top:10px">
+        <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Cadastrar faixa</a>
+        <a class="btn" href="{{ url_for('faixas.importar') }}">Importar CSV</a></div></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, mensagens, campo %}
+{% block titulo %}Criar conta{% endblock %}
+{% block pagina_publica %}
+<div class="auth">
+  <form class="card" method="post" novalidate>
+    {{ csrf() }}
+    <h1 class="logo"><span>HarmoniMix</span></h1>
+    <p class="sub">Crie a sua conta gratuita</p>
+    {{ mensagens() }}
+    {{ campo('nome', 'Nome completo', dados, erros, obrigatorio=True, attrs='autocomplete="name" maxlength="100"') }}
+    {{ campo('nome_artistico', 'Nome artístico', dados, erros, dica='Opcional. Aparece no topo do sistema.', attrs='maxlength="60"') }}
+    {{ campo('email', 'E-mail', dados, erros, tipo='email', obrigatorio=True, attrs='autocomplete="email"') }}
+    {{ campo('senha', 'Senha', {}, erros, tipo='password', obrigatorio=True, dica='Mínimo de 8 caracteres, com letras e números.', attrs='autocomplete="new-password"') }}
+    {{ campo('confirmacao', 'Confirmar senha', {}, erros, tipo='password', obrigatorio=True, attrs='autocomplete="new-password"') }}
+    <button class="btn primary" style="width:100%;justify-content:center" type="submit">Criar conta</button>
+    <p class="muted" style="text-align:center;font-size:13px;margin:16px 0 0">Já tem conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
+  </form>
+</div>
+{% endblock %}

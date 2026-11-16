@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo, csrf %}
+{% block titulo %}{{ 'Editar evento' if evento else 'Novo evento' }}{% endblock %}
+{% block trilha %}Início › <a href="{{ url_for('eventos.listar') }}">Eventos</a> › {{ self.titulo() }}{% endblock %}
+{% block conteudo %}
+<form class="card" method="post" style="max-width:560px" novalidate>
+  {{ csrf() }}
+  {{ campo('nome', 'Nome do evento', dados, erros, obrigatorio=True, attrs='maxlength="120" autofocus placeholder="Ex.: Casamento Ana e Pedro"') }}
+  {{ campo('data_evento', 'Data', dados, erros, tipo='date', obrigatorio=True) }}
+  {{ campo('local', 'Local', dados, erros, attrs='maxlength="120"') }}
+  <div class="row"><button class="btn primary" type="submit">Salvar evento</button>
+    <a class="btn" href="{{ url_for('eventos.listar') }}">Cancelar</a></div>
+</form>
+{% endblock %}

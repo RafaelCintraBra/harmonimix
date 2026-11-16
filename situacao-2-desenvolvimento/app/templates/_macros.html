@@ -1,0 +1,50 @@
+{# Componentes reutilizáveis da interface (consistência entre telas) #}
+
+{% macro tom(codigo) -%}
+  {%- set n = codigo[:-1]|int -%}
+  <span class="key" style="background:hsl({{ (n - 1) * 30 }} 85% 72%)" title="Tom {{ codigo }}">{{ codigo }}</span>
+{%- endmacro %}
+
+{% macro energia(valor) -%}
+  <span class="energy" title="Energia {{ valor }}/10" aria-label="Energia {{ valor }} de 10">
+    {%- for i in range(10) %}<i class="{{ 'on' if i < valor }}"></i>{% endfor -%}
+  </span>
+{%- endmacro %}
+
+{% macro badge_nivel(nivel, texto=None) -%}
+  {%- set classes = {'suave': 'b-ok', 'atencao': 'b-warn', 'arriscada': 'b-bad'} -%}
+  {%- set rotulos = {'suave': '🟢 Suave', 'atencao': '🟡 Atenção', 'arriscada': '🔴 Arriscada'} -%}
+  <span class="badge {{ classes[nivel] }}">{{ texto or rotulos[nivel] }}</span>
+{%- endmacro %}
+
+{% macro pontuacao(analise) -%}
+  {%- if analise.pontuacao is none -%}
+    <span class="muted">—</span>
+  {%- else -%}
+    {%- set icone = {'suave': '🟢', 'atencao': '🟡', 'arriscada': '🔴'}[analise.nivel_geral] -%}
+    {{ badge_nivel(analise.nivel_geral, icone ~ ' ' ~ (analise.pontuacao|round|int) ~ '%') }}
+  {%- endif -%}
+{%- endmacro %}
+
+{# Campo de formulário com rótulo, valor preservado e mensagem de erro ao lado #}
+{% macro campo(nome, rotulo, dados, erros, tipo='text', obrigatorio=False, dica=None, attrs='') -%}
+  <div class="field{{ ' err' if erros.get(nome) }}">
+    <label for="f-{{ nome }}">{{ rotulo }}{{ ' *' if obrigatorio }}</label>
+    <input id="f-{{ nome }}" name="{{ nome }}" type="{{ tipo }}" value="{{ dados.get(nome, '') }}"
+           {{ 'required' if obrigatorio }} {{ attrs|safe }}
+           {% if erros.get(nome) %}aria-invalid="true" aria-describedby="e-{{ nome }}"{% endif %}>
+    {% if erros.get(nome) %}<div class="msg-err" id="e-{{ nome }}">{{ erros[nome] }}</div>{% endif %}
+    {% if dica and not erros.get(nome) %}<div class="hint">{{ dica }}</div>{% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro csrf() -%}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{%- endmacro %}
+
+{% macro mensagens() -%}
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for categoria, texto in msgs %}
+      {% set icone = {'ok': '✅', 'bad': '⚠️', 'info': 'ℹ️'}.get(categoria, 'ℹ️') %}
+      <div class="alert {{ categoria }}" role="{{ 'alert' if categoria == 'bad' else 'status' }}">{{ icone }} {{ texto }}</div>
+    {% endfor %}
+  {% endwith %}
+{% endmacro %}

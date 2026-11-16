@@ -9,3 +9,4 @@ instance/
 htmlcov/
 .DS_Store
 entregas/
+*.db

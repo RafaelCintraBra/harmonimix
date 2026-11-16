@@ -9,14 +9,14 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 
 > Projeto Integrador Transdisciplinar em Engenharia de Software II
 
-![Editor de setlist (protótipo)](situacao-1-planejamento/img/T07-editor.png)
+![Editor de setlist](situacao-2-desenvolvimento/docs/img/07-editor-rascunho.png)
 
 ## 📂 Organização do repositório
 
 | Pasta | Conteúdo | Status |
 |-------|----------|--------|
 | [`situacao-1-planejamento/`](situacao-1-planejamento/) | Escopo, requisitos, UML, IHC e protótipo, banco de dados (conceitual, lógico, físico) e dicionário de dados | ✅ v2.0 |
-| [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), testes, manual de uso | ⏳ |
+| [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), 173 testes (99% de cobertura), manual de uso, roteiro do vídeo | ✅ |
 | [`situacao-3-validacao/`](situacao-3-validacao/) | Plano e relatório de testes, formulário de teste com usuários, feedbacks e correções | ⏳ |
 
 ## 🛠️ Tecnologias
@@ -29,7 +29,20 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 | ORM | SQLAlchemy |
 | Testes | pytest + pytest-cov |
 
-## 🗄️ Banco de dados (início rápido)
+## ▶️ Rodar o sistema (início rápido)
+
+```bash
+cd situacao-2-desenvolvimento
+pip install -r requirements.txt
+flask --app run init-db
+flask --app run seed-demo
+flask --app run run --debug
+```
+
+Acesse http://127.0.0.1:5000. Instruções completas em [situacao-2-desenvolvimento/README.md](situacao-2-desenvolvimento/README.md)
+e no [manual de uso](situacao-2-desenvolvimento/docs/MANUAL-DE-USO.md).
+
+## 🗄️ Banco de dados MySQL
 
 ```bash
 mysql -u root -p < situacao-1-planejamento/sql/01_schema_mysql.sql
