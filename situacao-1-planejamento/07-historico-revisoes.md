@@ -29,6 +29,7 @@
 | R10 | IHC | Badges de status quebravam linha; gráfico sem escala de energia | Badges sem quebra; eixo de energia (0–10) à direita do gráfico | Legibilidade |
 | R11 | IHC | Busca do editor só mostrava faixas compatíveis | O DJ pode adicionar **qualquer** faixa; se for incompatível, recebe o aviso MSG15 | Princípio do **controle do usuário**: o sistema sugere, não impõe |
 | R12 | UML | Sem diagrama de arquitetura | Diagrama de classes de projeto com **MVC + camada de serviços** (`HarmoniaService`) | Preparar a Situação 2 e isolar as regras para teste |
+| R13 | Tecnologias | Gráfico com a biblioteca Chart.js | Gráfico e Roda de Camelot em **SVG com JavaScript puro** | Decidido na Situação 2: o sistema funciona sem internet, sem dependência externa, e o mesmo código já existia no protótipo |
 
 ## 7.3 Críticas dos colegas
 

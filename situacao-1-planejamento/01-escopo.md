@@ -114,7 +114,7 @@ gasto na preparação de apresentações.
 
 | Camada | Tecnologia | Justificativa |
 |--------|------------|---------------|
-| Front-end | HTML5, CSS3, JavaScript, Chart.js | Padrão da web; Chart.js para o gráfico de energia |
+| Front-end | HTML5, CSS3, JavaScript (SVG) | Padrão da web; gráfico de energia e Roda de Camelot desenhados em SVG, sem bibliotecas externas (ver revisão R13) |
 | Back-end | Python 3 + Flask | Leve, legível e adequado ao padrão MVC |
 | Persistência | SQLAlchemy (ORM) | Separa o *Model* do SGBD; permite trocar MySQL por SQLite nos testes |
 | Banco de dados | **MySQL 8** (produção) / SQLite (testes) | SGBD popular, gratuito e bem documentado |

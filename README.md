@@ -23,7 +23,7 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 
 | Camada | Tecnologia |
 |--------|------------|
-| Front-end | HTML5, CSS3, JavaScript, Chart.js |
+| Front-end | HTML5, CSS3, JavaScript (gráficos em SVG, sem bibliotecas externas) |
 | Back-end | Python 3 + Flask (padrão **MVC**) |
 | Banco de dados | **MySQL 8** (SQLite nos testes) |
 | ORM | SQLAlchemy |
