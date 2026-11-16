@@ -54,7 +54,7 @@ def test_adicionar_faixas_e_ver_analise(logado, app, usuario, criar_faixa, criar
     assert "Tom incompatível (8A → 5A) · BPM +10,2% (acima de 6%)" in html
     assert "14:42" in html                              # 330 + 372 + 180 segundos
     assert "1 de 2 suaves" in html and "50%" in html
-    assert 'id="grafico-energia"' in html
+    assert 'id="visao-geral"' in html                   # visão geral do set (desenhada no navegador)
 
 
 def test_faixa_repetida_no_setlist_rn10(logado, app, usuario, criar_faixa, criar_setlist):
@@ -148,7 +148,8 @@ def test_listar_setlists_com_pontuacao(logado, usuario, criar_faixa, criar_setli
     b = criar_faixa(usuario, titulo="B", tom="9A", bpm=122)
     criar_setlist(usuario, nome="Perfeito", ids_faixas=[a, b])
     html = logado.get("/setlists/").get_data(as_text=True)
-    assert "Perfeito" in html and "🟢 100%" in html
+    assert "Perfeito" in html and 'class="badge b-ok">100% suave' in html
+    assert 'class="mini-ribbon"' in html                # miniatura da visão geral
 
 
 def test_exportar_csv(logado, usuario, criar_faixa, criar_setlist):

@@ -1,58 +1,61 @@
 {% extends "base.html" %}
-{% from "_macros.html" import pontuacao %}
+{% from "_macros.html" import pontuacao, mini_ribbon %}
 {% block titulo %}Painel{% endblock %}
-{% block cabecalho %}Olá, {{ g.usuario.nome_exibicao }} 👋{% endblock %}
+{% block cabecalho %}Olá, {{ g.usuario.nome_exibicao }}{% endblock %}
+{% block acoes %}<a class="btn primary" href="{{ url_for('setlists.listar') }}">Novo setlist</a>{% endblock %}
 {% block conteudo %}
-<div class="grid g4" style="margin-bottom:14px">
-  <div class="card stat"><div class="n">{{ qtd_faixas }}</div><div class="l">faixas na biblioteca</div></div>
-  <div class="card stat"><div class="n">{{ qtd_setlists }}</div><div class="l">setlists</div></div>
-  <div class="card stat"><div class="n">{{ bpm_medio|num }}</div><div class="l">BPM médio da biblioteca</div></div>
-  <div class="card stat"><div class="n">{{ proximos|length }}</div><div class="l">próximos eventos</div></div>
-</div>
+<p class="muted" style="margin-top:-12px">
+  {% if qtd_faixas %}{{ qtd_faixas }} faixa{{ 's' if qtd_faixas != 1 }} na biblioteca, BPM médio de {{ bpm_medio|num }}.
+  <a href="{{ url_for('faixas.listar') }}">Ver biblioteca</a>{% endif %}
+</p>
 
 {% if qtd_faixas == 0 %}
-<div class="card empty" style="margin-bottom:14px">
-  <div class="big">🎵</div>
-  <h3>Sua biblioteca está vazia</h3>
-  <p>Comece cadastrando as suas músicas com BPM e tom, ou importe uma planilha CSV.</p>
-  <div class="row" style="justify-content:center">
-    <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Cadastrar faixa</a>
-    <a class="btn" href="{{ url_for('faixas.importar') }}">Importar CSV</a>
+<div class="card empty" style="margin:20px 0">
+  <strong>Sua biblioteca está vazia</strong>
+  Cadastre as suas músicas com BPM e tom, ou importe a playlist do Rekordbox.
+  <div class="row">
+    <a class="btn primary" href="{{ url_for('faixas.nova') }}">Cadastrar faixa</a>
+    <a class="btn" href="{{ url_for('faixas.importar') }}">Importar playlist</a>
   </div>
 </div>
 {% endif %}
 
-<div class="grid g2">
-  <div class="card table-wrap"><h3>Setlists recentes</h3>
+<div class="grid g2" style="margin-top:24px">
+  <section aria-labelledby="titulo-sets">
+    <div class="secao-titulo"><h2 id="titulo-sets">Seus setlists</h2>
+      {% if qtd_setlists > recentes|length %}<a class="muted" href="{{ url_for('setlists.listar') }}">Ver todos ({{ qtd_setlists }})</a>{% endif %}</div>
     {% if recentes %}
-    <table>
-      <thead><tr><th>Setlist</th><th>Faixas</th><th>Duração</th><th>Harmonia</th></tr></thead>
+    <div class="table-wrap">
+    <table class="lista-sets">
+      <thead><tr><th>Setlist</th><th>Visão geral</th><th class="num">Faixas</th><th class="num">Duração</th><th>Harmonia</th></tr></thead>
       <tbody>
-      {% for s, a in recentes %}
+      {% for s, a, c in recentes %}
         <tr><td><a href="{{ url_for('setlists.editor', id_setlist=s.id) }}">{{ s.nome }}</a></td>
-            <td>{{ a.qtd_faixas }}</td><td>{{ a.duracao_total|duracao }}</td><td>{{ pontuacao(a) }}</td></tr>
+            <td>{% if a.qtd_faixas %}{{ mini_ribbon(c) }}{% else %}<span class="muted">vazio</span>{% endif %}</td>
+            <td class="num">{{ a.qtd_faixas }}</td><td class="num">{{ a.duracao_total|duracao }}</td><td>{{ pontuacao(a) }}</td></tr>
       {% endfor %}
       </tbody>
     </table>
+    </div>
     {% else %}
       <p class="muted">Nenhum setlist ainda. <a href="{{ url_for('setlists.listar') }}">Crie o primeiro</a>.</p>
     {% endif %}
-  </div>
-  <div class="card"><h3>Próximos eventos</h3>
+  </section>
+
+  <section class="card" aria-labelledby="titulo-eventos">
+    <h2 id="titulo-eventos" style="margin-bottom:14px">Próximos eventos</h2>
     {% for e in proximos %}
-      <div class="row" style="justify-content:space-between;margin-bottom:10px">
-        <div><b>{{ e.nome }}</b><div class="muted" style="font-size:13px">{{ e.data_fmt }}{{ ' · ' ~ e.local if e.local }}</div></div>
-        <span class="tag">{{ 'hoje' if e.dias_restantes == 0 else 'em ' ~ e.dias_restantes ~ (' dia' if e.dias_restantes == 1 else ' dias') }}</span>
+      <div class="row" style="justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--linha)">
+        <div><b>{{ e.nome }}</b><div class="muted" style="font-size:13px">{{ e.data_fmt }}{% if e.local %}, {{ e.local }}{% endif %}</div></div>
+        <span class="tag num">{{ 'hoje' if e.dias_restantes == 0 else 'em ' ~ e.dias_restantes ~ (' dia' if e.dias_restantes == 1 else ' dias') }}</span>
       </div>
     {% else %}
       <p class="muted">Nenhum evento agendado.</p>
     {% endfor %}
-    <hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
-    <div class="row">
-      <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Nova faixa</a>
-      <a class="btn" href="{{ url_for('setlists.listar') }}">+ Novo setlist</a>
-      <a class="btn" href="{{ url_for('eventos.novo') }}">+ Novo evento</a>
+    <div class="row" style="margin-top:16px">
+      <a class="btn sm" href="{{ url_for('eventos.novo') }}">Novo evento</a>
+      <a class="btn sm" href="{{ url_for('faixas.nova') }}">Nova faixa</a>
     </div>
-  </div>
+  </section>
 </div>
 {% endblock %}

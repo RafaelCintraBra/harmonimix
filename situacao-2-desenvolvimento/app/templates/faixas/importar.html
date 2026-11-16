@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf %}
-{% block titulo %}Importar faixas{% endblock %}
-{% block trilha %}Início › <a href="{{ url_for('faixas.listar') }}">Biblioteca</a> › Importar CSV{% endblock %}
+{% block titulo %}Importar playlist{% endblock %}
+{% block trilha %}<a href="{{ url_for('faixas.listar') }}">Biblioteca</a>{% endblock %}
 {% block conteudo %}
 <div class="grid g2">
   <form class="card" method="post" enctype="multipart/form-data" style="align-self:start">
     {{ csrf() }}
-    <h3>Enviar planilha ou playlist</h3>
+    <h2 style="margin-bottom:16px">Enviar arquivo</h2>
     <div class="field"><label for="arquivo">Arquivo .csv ou .txt do Rekordbox (máx. 1 MB)</label>
       <input id="arquivo" name="arquivo" type="file" accept=".csv,.txt,text/csv,text/plain" required></div>
     <div class="row"><button class="btn primary" type="submit">Importar</button>
@@ -14,8 +14,8 @@
 
     {% if resultado %}
       <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
-      <h3>Resultado</h3>
-      <p>✅ {{ resultado.importadas }} importada(s) · ⏭️ {{ resultado.ignoradas }} já existia(m) na biblioteca · ⚠️ {{ resultado.erros|length }} com erro</p>
+      <h2 style="margin-bottom:8px">Resultado</h2>
+      <p class="num">{{ resultado.importadas }} importada(s), {{ resultado.ignoradas }} já existia(m) na biblioteca, {{ resultado.erros|length }} com erro.</p>
       {% if resultado.erros %}
         <div class="alert bad" role="alert"><div>
           <b>Linhas não importadas:</b>
@@ -27,7 +27,7 @@
   </form>
   <div>
   <div class="card" style="margin-bottom:14px">
-    <h3>🎛️ Do Rekordbox</h3>
+    <h2 style="margin-bottom:12px">Do Rekordbox</h2>
     <ol style="padding-left:18px;margin:0">
       <li>Na lista de músicas, clique com o botão direito no cabeçalho das colunas e deixe visíveis
         <b>Track Title</b>, <b>Artist</b>, <b>BPM</b>, <b>Key</b> e <b>Time</b> (Genre é opcional).</li>
@@ -38,7 +38,7 @@
       o sistema converte sozinho. Músicas ainda não analisadas (sem BPM ou tom) aparecem na lista de erros.</p>
   </div>
   <div class="card">
-    <h3>Planilha CSV (Excel, Google Planilhas)</h3>
+    <h2 style="margin-bottom:12px">De uma planilha (Excel, Google Planilhas)</h2>
     <p>A primeira linha é o cabeçalho. Separador: <code>;</code> ou <code>,</code>.</p>
 <pre class="csv">titulo;artista;bpm;tom;genero;energia;duracao
 Aurora Boreal;Lumen Drift;118;8A;Deep House;4;06:12

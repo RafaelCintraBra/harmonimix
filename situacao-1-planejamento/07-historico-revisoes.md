@@ -30,6 +30,7 @@
 | R11 | IHC | Busca do editor só mostrava faixas compatíveis | O DJ pode adicionar **qualquer** faixa; se for incompatível, recebe o aviso MSG15 | Princípio do **controle do usuário**: o sistema sugere, não impõe |
 | R12 | UML | Sem diagrama de arquitetura | Diagrama de classes de projeto com **MVC + camada de serviços** (`HarmoniaService`) | Preparar a Situação 2 e isolar as regras para teste |
 | R13 | Tecnologias | Gráfico com a biblioteca Chart.js | Gráfico e Roda de Camelot em **SVG com JavaScript puro** | Decidido na Situação 2: o sistema funciona sem internet, sem dependência externa, e o mesmo código já existia no protótipo |
+| R14 | IHC | Protótipo com tema roxo/ciano e editor baseado em cartões de números | Redesenho "mesa de som" na Situação 2/3: visão geral do set, transições como "cabos" coloridos, cores dos 12 tons, fonte Archivo | Crítica de design: dar destaque ao que é único do sistema (o set e as transições). Detalhes em `situacao-3-validacao/correcoes/REGISTRO-DE-CORRECOES.md` (M01–M06). O protótipo HTML foi mantido como registro da versão 2.0 |
 
 ## 7.3 Críticas dos colegas
 

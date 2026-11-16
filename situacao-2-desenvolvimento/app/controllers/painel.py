@@ -6,7 +6,7 @@ from sqlalchemy import func, select
 
 from ..extensions import db
 from ..models import Evento, Faixa, Setlist
-from ..services.harmonia import analisar_setlist
+from ..services.harmonia import analisar_setlist, curva_energia
 from .auth import login_obrigatorio
 
 bp = Blueprint("painel", __name__)
@@ -29,7 +29,7 @@ def inicio():
     proximos = db.session.scalars(
         select(Evento).where(Evento.id_usuario == uid, Evento.data_evento >= date.today())
         .order_by(Evento.data_evento).limit(5)).all()
-    recentes = [(s, analisar_setlist(s.faixas)) for s in setlists[:5]]
+    recentes = [(s, analisar_setlist(s.faixas), curva_energia(s.faixas)) for s in setlists[:6]]
     return render_template("painel.html", qtd_faixas=qtd_faixas,
                            bpm_medio=float(bpm_medio) if bpm_medio is not None else None,
                            qtd_setlists=len(setlists), recentes=recentes, proximos=proximos)

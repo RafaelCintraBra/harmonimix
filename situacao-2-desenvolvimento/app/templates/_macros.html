@@ -1,29 +1,35 @@
 {# Componentes reutilizáveis da interface (consistência entre telas) #}
 
+{% macro hue(codigo) -%}hsl({{ (codigo[:-1]|int - 1) * 30 }} 75% 68%){%- endmacro %}
+
 {% macro tom(codigo) -%}
-  {%- set n = codigo[:-1]|int -%}
-  <span class="key" style="background:hsl({{ (n - 1) * 30 }} 85% 72%)" title="Tom {{ codigo }}">{{ codigo }}</span>
+  <span class="key" style="--hue:{{ hue(codigo) }}" title="Tom {{ codigo }}">{{ codigo }}</span>
 {%- endmacro %}
 
 {% macro energia(valor) -%}
-  <span class="energy" title="Energia {{ valor }}/10" aria-label="Energia {{ valor }} de 10">
+  <span class="energy" title="Energia {{ valor }} de 10" aria-label="Energia {{ valor }} de 10">
     {%- for i in range(10) %}<i class="{{ 'on' if i < valor }}"></i>{% endfor -%}
   </span>
 {%- endmacro %}
 
 {% macro badge_nivel(nivel, texto=None) -%}
   {%- set classes = {'suave': 'b-ok', 'atencao': 'b-warn', 'arriscada': 'b-bad'} -%}
-  {%- set rotulos = {'suave': '🟢 Suave', 'atencao': '🟡 Atenção', 'arriscada': '🔴 Arriscada'} -%}
+  {%- set rotulos = {'suave': 'Suave', 'atencao': 'Atenção', 'arriscada': 'Arriscada'} -%}
   <span class="badge {{ classes[nivel] }}">{{ texto or rotulos[nivel] }}</span>
 {%- endmacro %}
 
 {% macro pontuacao(analise) -%}
   {%- if analise.pontuacao is none -%}
-    <span class="muted">—</span>
+    <span class="muted">sem transições</span>
   {%- else -%}
-    {%- set icone = {'suave': '🟢', 'atencao': '🟡', 'arriscada': '🔴'}[analise.nivel_geral] -%}
-    {{ badge_nivel(analise.nivel_geral, icone ~ ' ' ~ (analise.pontuacao|round|int) ~ '%') }}
+    {{ badge_nivel(analise.nivel_geral, (analise.pontuacao|round|int) ~ '% suave') }}
   {%- endif -%}
+{%- endmacro %}
+
+{# Miniatura da visão geral do set (desenhada por app.js) #}
+{% macro mini_ribbon(curva) -%}
+  <span class="mini-ribbon" data-curva='{{ curva|tojson }}' role="img"
+        aria-label="Visão geral do set: {{ curva.bpm|length }} faixas"></span>
 {%- endmacro %}
 
 {# Campo de formulário com rótulo, valor preservado e mensagem de erro ao lado #}
@@ -43,8 +49,12 @@
 {% macro mensagens() -%}
   {% with msgs = get_flashed_messages(with_categories=true) %}
     {% for categoria, texto in msgs %}
-      {% set icone = {'ok': '✅', 'bad': '⚠️', 'info': 'ℹ️'}.get(categoria, 'ℹ️') %}
-      <div class="alert {{ categoria }}" role="{{ 'alert' if categoria == 'bad' else 'status' }}">{{ icone }} {{ texto }}</div>
+      <div class="alert {{ categoria }}" role="{{ 'alert' if categoria == 'bad' else 'status' }}">{{ texto }}</div>
     {% endfor %}
   {% endwith %}
-{% endmacro %}
+{%- endmacro %}
+
+{# Anel de Camelot decorativo (marca), desenhado por app.js #}
+{% macro anel(classe='anel', destaque='') -%}
+  <span class="{{ classe }}" data-anel="{{ destaque }}" aria-hidden="true"></span>
+{%- endmacro %}

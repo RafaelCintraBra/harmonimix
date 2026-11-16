@@ -231,13 +231,16 @@ def analisar_setlist(faixas: list) -> Analise:
 
 
 def curva_energia(faixas: list) -> dict:
-    """Dados para o gráfico (RF12): posição, título, BPM e energia de cada faixa."""
+    """Dados da visão geral do set (RF12): por faixa, título, BPM, energia, tom e duração;
+    por transição, o nível (suave/atencao/arriscada)."""
     return {
         "rotulos": [str(i) for i in range(1, len(faixas) + 1)],
         "titulos": [f.titulo for f in faixas],
         "bpm": [float(f.bpm) for f in faixas],
         "energia": [int(f.energia) for f in faixas],
         "tons": [f.cod_tom for f in faixas],
+        "duracoes": [int(f.duracao_seg) for f in faixas],
+        "niveis": [classificar_transicao(a, b).nivel for a, b in zip(faixas, faixas[1:])],
     }
 
 

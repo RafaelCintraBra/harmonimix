@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% from "_macros.html" import campo, csrf %}
 {% block titulo %}{{ 'Editar faixa' if faixa else 'Nova faixa' }}{% endblock %}
-{% block trilha %}Início › <a href="{{ url_for('faixas.listar') }}">Biblioteca</a> › {{ self.titulo() }}{% endblock %}
+{% block trilha %}<a href="{{ url_for('faixas.listar') }}">Biblioteca</a>{% endblock %}
 {% block conteudo %}
 <form class="card" method="post" style="max-width:720px" novalidate>
   {{ csrf() }}
   <div class="grid form2" style="grid-template-columns:1fr 1fr">
     {{ campo('titulo', 'Título', dados, erros, obrigatorio=True, attrs='maxlength="150" autofocus') }}
     {{ campo('artista', 'Artista', dados, erros, obrigatorio=True, attrs='maxlength="120"') }}
-    {{ campo('bpm', 'BPM', dados, erros, obrigatorio=True, dica='Entre 60 e 200. Ex.: 128 ou 123,5', attrs='inputmode="decimal"') }}
+    {{ campo('bpm', 'BPM', dados, erros, obrigatorio=True, dica='De 60 a 200. Exemplo: 128 ou 123,5', attrs='inputmode="decimal" class="num"') }}
     <div class="field{{ ' err' if erros.cod_tom }}">
       <label for="f-cod_tom">Tom (Camelot) *</label>
       <select id="f-cod_tom" name="cod_tom" required {% if erros.cod_tom %}aria-invalid="true"{% endif %}>
         <option value="">Selecione…</option>
-        {% for t in tons %}<option value="{{ t.codigo }}" {{ 'selected' if dados.get('cod_tom', '')|upper == t.codigo }}>{{ t.codigo }} · {{ t.nome_musical }}</option>{% endfor %}
+        {% for t in tons %}<option value="{{ t.codigo }}" {{ 'selected' if dados.get('cod_tom', '')|upper == t.codigo }}>{{ t.codigo }}, {{ t.nome_musical }}</option>{% endfor %}
       </select>
       {% if erros.cod_tom %}<div class="msg-err">{{ erros.cod_tom }} <a href="{{ url_for('ajuda.camelot') }}" target="_blank">Não sabe? Veja a Roda de Camelot</a></div>
       {% else %}<div class="hint"><a href="{{ url_for('ajuda.camelot') }}" target="_blank">O que é isso?</a></div>{% endif %}
@@ -25,13 +25,13 @@
       </select>
       {% if erros.id_genero %}<div class="msg-err">{{ erros.id_genero }}</div>{% endif %}
     </div>
-    {{ campo('duracao', 'Duração (mm:ss)', dados, erros, obrigatorio=True, dica='Ex.: 06:12', attrs='placeholder="mm:ss"') }}
+    {{ campo('duracao', 'Duração (mm:ss)', dados, erros, obrigatorio=True, dica='Exemplo: 06:12', attrs='placeholder="mm:ss"') }}
     <div class="field{{ ' err' if erros.energia }}" style="grid-column:1/-1">
       {% set ener = dados.get('energia') or '5' %}
       <label for="f-energia">Energia: <b id="energia-valor">{{ ener }}</b> / 10</label>
       <input id="f-energia" name="energia" type="range" min="1" max="10" value="{{ ener if ener|string|int else 5 }}" data-saida="energia-valor">
       {% if erros.energia %}<div class="msg-err">{{ erros.energia }}</div>{% endif %}
-      <div class="hint">1 = calma (abertura) · 10 = pico da pista</div>
+      <div class="hint">1 é calma, para abrir a noite; 10 é o pico da pista.</div>
     </div>
   </div>
   <div class="row">

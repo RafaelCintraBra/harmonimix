@@ -45,7 +45,7 @@ def cadastrar_faixa(pg, servidor, titulo, artista, bpm, tom, duracao="05:00"):
 def test_cts01_cadastro_login_e_logout(pagina, servidor):
     email = nova_conta(pagina, servidor, nome="Lucas Andrade")
     expect(pagina.locator("h1")).to_contain_text("Olá, Lucas")
-    pagina.click("text=↩ Sair")
+    pagina.get_by_role("button", name="Sair").click()
     expect(pagina.locator(".alert")).to_contain_text("Você saiu da sua conta.")
     pagina.goto(servidor + "/painel")                          # rota protegida
     expect(pagina).to_have_url(re.compile(r"/login"))
@@ -134,7 +134,7 @@ def test_cts05_06_criar_evento_setlist_e_montar_com_sugestoes(pagina, servidor):
 
     pagina.goto(servidor + "/setlists/")
     pagina.fill("#f-nome", "Set da formatura")
-    pagina.select_option("#f-id_evento", label="Formatura · 12/12/2030")
+    pagina.select_option("#f-id_evento", label="Formatura (12/12/2030)")
     pagina.click("button:has-text('Criar e abrir editor')")
     expect(pagina.locator("h1")).to_have_text("Set da formatura")
     expect(pagina.locator(".empty")).to_contain_text("O setlist está vazio")
@@ -144,14 +144,14 @@ def test_cts05_06_criar_evento_setlist_e_montar_com_sugestoes(pagina, servidor):
     pagina.locator(".sug", has_text="Garoa").locator("button").click()
     expect(pagina.locator(".alert.ok")).to_contain_text("“Garoa” adicionada na posição 1.")
 
-    sugestoes = pagina.locator(".card", has_text="💡 Sugestões")  # CTS-06: sugestões compatíveis
+    sugestoes = pagina.locator("#sugestoes")                   # CTS-06: sugestões compatíveis
     expect(sugestoes).to_contain_text("Aurora")
     expect(sugestoes).not_to_contain_text("Funk")              # 7A → 5A é incompatível
     sugestoes.locator(".sug", has_text="Aurora").locator("button").click()
-    pagina.locator(".card", has_text="💡 Sugestões").locator(".sug", has_text="Maré").locator("button").click()
+    pagina.locator("#sugestoes .sug", has_text="Maré").locator("button").click()
 
     expect(pagina.locator(".trans")).to_have_count(2)
-    expect(pagina.locator(".trans").first).to_contain_text("🟢 Suave")
+    expect(pagina.locator(".trans").first).to_contain_text("Suave")
     expect(pagina.locator(".trans").first).to_contain_text("7A → 8A vizinho · BPM −2,5%")
     expect(pagina.locator(".stat", has_text="pontuação harmônica")).to_contain_text("100%")
     expect(pagina.locator(".stat", has_text="duração total")).to_contain_text("15:00")
@@ -170,12 +170,12 @@ def test_cts07_reordenar_remover_e_recalcular(pagina, servidor):
         pagina.fill("input[name=busca]", titulo)
         pagina.click("button:has-text('Buscar')")
         pagina.locator(".sug", has_text=titulo).locator("button").click()
-    expect(pagina.locator(".trans").first).to_contain_text("🔴 Arriscada")      # 8A → 5A, +10,2%
+    expect(pagina.locator(".trans").first).to_contain_text("Arriscada")         # 8A → 5A, +10,2%
 
     pagina.get_by_role("button", name="Descer Funk").click()                      # Funk vai para o fim
     titulos = pagina.locator(".track .t-title").all_inner_texts()
     assert titulos == ["Aurora", "Maré", "Funk"]
-    expect(pagina.locator(".trans").first).to_contain_text("🟢 Suave")
+    expect(pagina.locator(".trans").first).to_contain_text("Suave")
     expect(pagina.get_by_role("button", name="Subir Aurora")).to_be_disabled()     # 1ª faixa não sobe
 
     pagina.get_by_role("button", name="Remover Funk").click()
@@ -190,12 +190,16 @@ def test_cts08_grafico_da_curva_de_energia(pagina, servidor, entrar):
     entrar(pagina)
     pagina.goto(servidor + "/setlists/")
     pagina.click("text=Warm-up até o pico")
-    grafico = pagina.locator("#grafico-energia svg")
+    grafico = pagina.locator("#visao-geral svg")
     expect(grafico).to_be_visible()
-    expect(grafico.locator("circle")).to_have_count(9)                     # 1 ponto de BPM por faixa
-    expect(grafico.locator("rect")).to_have_count(9)                       # 1 barra de energia por faixa
-    expect(grafico.locator("polyline")).to_have_count(1)
-    expect(grafico.locator("circle").first.locator("title")).to_contain_text("Aurora Boreal · 8A · 118 BPM")
+    expect(grafico.locator("rect")).to_have_count(9)                       # 1 bloco por faixa (cor = tom)
+    expect(grafico.locator("circle")).to_have_count(8)                     # 1 LED por transição
+    expect(grafico.locator("polyline")).to_have_count(2)                   # linha de BPM (contorno + traço)
+    expect(grafico.locator("rect").first.locator("title")).to_contain_text("Aurora Boreal (8A, 118 BPM, energia 4)")
+    expect(grafico.locator("circle").first.locator("title")).to_have_text("Transição 1 → 2: Suave")
+    # blocos proporcionais à duração: a faixa de 7:00 é mais larga que a de 5:18
+    larguras = [float(r.get_attribute("width")) for r in grafico.locator("rect").all()]
+    assert larguras[8] > larguras[4]
 
 
 # --------------------------------------------------------------------------- CTS-09
@@ -236,7 +240,7 @@ def test_cts11_exportar_setlist_em_csv(pagina, servidor, entrar):
     pagina.goto(servidor + "/setlists/")
     pagina.click("text=Rascunho: precisa revisar")
     with pagina.expect_download() as info:
-        pagina.click("text=⬇ Exportar CSV")
+        pagina.click("text=Exportar CSV")
     download = info.value
     assert download.suggested_filename == "rascunho--precisa-revisar.csv"
     texto = Path(download.path()).read_text(encoding="utf-8-sig")
@@ -251,7 +255,7 @@ def test_cts11_exportar_setlist_em_csv(pagina, servidor, entrar):
 @pytest.mark.evidencia("CTS-12-roda-de-camelot")
 def test_cts12_roda_de_camelot_interativa(pagina, servidor, entrar):
     entrar(pagina)
-    pagina.click("text=🎡 Roda de Camelot")
+    pagina.get_by_role("link", name="Roda de Camelot").click()
     roda = pagina.locator("#roda-camelot svg")
     expect(roda.locator("a")).to_have_count(24)
     roda.locator("a[aria-label='Tom 12B']").click()

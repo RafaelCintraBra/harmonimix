@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf %}
 {% block titulo %}Eventos{% endblock %}
-{% block trilha %}Início › Eventos{% endblock %}
-{% block acoes %}<a class="btn primary" href="{{ url_for('eventos.novo') }}">+ Novo evento</a>{% endblock %}
+{% block acoes %}<a class="btn primary" href="{{ url_for('eventos.novo') }}">Novo evento</a>{% endblock %}
 {% block conteudo %}
-<div class="card table-wrap">
+<div class="table-wrap">
   {% if eventos %}
   <table>
     <thead><tr><th>Data</th><th>Evento</th><th>Local</th><th>Setlists</th><th><span class="sr-only">Ações</span></th></tr></thead>
@@ -14,7 +13,7 @@
         <td>{{ e.data_fmt }}{% if e.dias_restantes >= 0 %} <span class="tag">{{ 'hoje' if e.dias_restantes == 0 else 'em ' ~ e.dias_restantes ~ ' d' }}</span>{% endif %}</td>
         <td><b>{{ e.nome }}</b></td><td class="muted">{{ e.local or '—' }}</td>
         <td>{% for s in e.setlists %}<a href="{{ url_for('setlists.editor', id_setlist=s.id) }}">{{ s.nome }}</a>{{ ', ' if not loop.last }}{% else %}
-          <a class="btn sm" href="{{ url_for('setlists.listar', evento=e.id) }}">+ Criar setlist</a>{% endfor %}</td>
+          <a class="btn sm" href="{{ url_for('setlists.listar', evento=e.id) }}">Criar setlist</a>{% endfor %}</td>
         <td><div class="row" style="flex-wrap:nowrap;gap:6px">
           <a class="btn sm" href="{{ url_for('eventos.editar', id_evento=e.id) }}">Editar</a>
           <form class="inline" method="post" action="{{ url_for('eventos.excluir', id_evento=e.id) }}"
@@ -26,8 +25,8 @@
     </tbody>
   </table>
   {% else %}
-    <div class="empty"><div class="big">📅</div>Nenhum evento cadastrado.
-      <div style="margin-top:10px"><a class="btn primary" href="{{ url_for('eventos.novo') }}">+ Novo evento</a></div></div>
+    <div class="card empty"><strong>Nenhum evento cadastrado.</strong>Cadastre a sua próxima apresentação para preparar o setlist dela.
+      <div class="row"><a class="btn primary" href="{{ url_for('eventos.novo') }}">Novo evento</a></div></div>
   {% endif %}
 </div>
 {% endblock %}

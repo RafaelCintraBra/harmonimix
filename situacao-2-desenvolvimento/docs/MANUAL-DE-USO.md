@@ -13,7 +13,7 @@ com **BPM** e **tom**, e o sistema avisa quais transições funcionam e sugere a
 2. Preencha nome, e-mail e senha (mínimo de 8 caracteres, com letras e números). O nome artístico é opcional.
 3. Clique em **Criar conta**. Você já entra direto no painel.
 
-Da próxima vez, use **e-mail e senha** na tela de login. Para sair, clique em **↩ Sair** no menu.
+Da próxima vez, use **e-mail e senha** na tela de login. Para sair, clique em **Sair** no menu.
 
 ![Login](img/01-login.png)
 
@@ -26,7 +26,7 @@ próximos eventos. Os botões de atalho criam faixas, setlists e eventos.
 
 ## 3. Biblioteca de faixas
 
-Menu **🎵 Biblioteca**. Aqui ficam todas as suas músicas.
+Menu **Biblioteca**. Aqui ficam todas as suas músicas.
 
 - **Buscar:** digite parte do título ou do artista.
 - **Filtrar:** por gênero, tom ou faixa de BPM (ex.: de 120 a 128).
@@ -38,7 +38,7 @@ Menu **🎵 Biblioteca**. Aqui ficam todas as suas músicas.
 
 ### 3.1 Cadastrar uma faixa
 
-Clique em **+ Nova faixa** e preencha:
+Clique em **Nova faixa** e preencha:
 
 | Campo | O que colocar | Exemplo |
 |-------|---------------|---------|
@@ -51,7 +51,7 @@ Clique em **+ Nova faixa** e preencha:
 
 > **Onde descubro o BPM e o tom?** Softwares de DJ (Rekordbox, Serato, Traktor, VirtualDJ) e sites como
 > Tunebat ou SongBPM mostram essas informações. Se o tom vier como nome musical (ex.: "Lá menor" ou "Am"), consulte a
-> tabela na página **🎡 Roda de Camelot**.
+> tabela na página **Roda de Camelot**.
 
 Se algo estiver errado, o campo fica **vermelho** com uma explicação, e o que você digitou não se perde.
 Use **Salvar e cadastrar outra** para cadastrar várias seguidas.
@@ -66,14 +66,14 @@ O jeito mais rápido de trazer as suas músicas: o Rekordbox já analisou o BPM,
    **Track Title**, **Artist**, **BPM**, **Key** e **Time** (e **Genre**, se quiser).
 2. Clique com o botão direito na **playlist** → **Exportar uma playlist para um arquivo** → escolha o formato **.txt**.
    (O nome do menu pode variar um pouco conforme a versão do Rekordbox.)
-3. No HarmoniMix, vá em **Biblioteca → ⬆ Importar CSV** e envie o arquivo `.txt`.
+3. No HarmoniMix, vá em **Biblioteca → Importar playlist** e envie o arquivo `.txt`.
 
 O tom pode estar em notação musical (`Am`, `F#m`, `Db`) ou em Camelot (`8A`): o sistema converte sozinho para a Roda
 de Camelot. Músicas que o Rekordbox ainda não analisou (sem BPM ou tom) aparecem na lista de erros, com o nome.
 
 ### 3.3 Importar de uma planilha (CSV)
 
-Clique em **⬆ Importar CSV**. A planilha precisa ter estas colunas na primeira linha:
+Clique em **Importar playlist**. A planilha precisa ter estas colunas na primeira linha:
 
 ```
 titulo;artista;bpm;tom;genero;energia;duracao
@@ -88,14 +88,14 @@ e as linhas com erro são listadas com o motivo. Há um modelo pronto em [`exemp
 
 ## 4. Eventos
 
-Menu **📅 Eventos**. Cadastre as suas apresentações (nome, data e local). Depois, vincule setlists a cada evento.
+Menu **Eventos**. Cadastre as suas apresentações (nome, data e local). Depois, vincule setlists a cada evento.
 Se você excluir um evento, os setlists **não são apagados**: só ficam sem evento.
 
 ![Eventos](img/08-eventos.png)
 
 ## 5. Setlists
 
-Menu **📋 Setlists**. A lista mostra cada setlist com a quantidade de faixas, a duração e a **nota de harmonia**.
+Menu **Setlists**. A lista mostra cada setlist com a quantidade de faixas, a duração e a **nota de harmonia**.
 Para criar um, preencha o nome (e o evento, se quiser) e clique em **Criar e abrir editor**.
 
 ![Setlists](img/05-setlists.png)
@@ -105,20 +105,20 @@ Para criar um, preencha o nome (e o evento, se quiser) e clique em **Criar e abr
 ![Editor de setlist](img/07-editor-rascunho.png)
 
 ### 6.1 Adicionar faixas
-- **💡 Sugestões:** depois da primeira música, o sistema mostra as faixas da sua biblioteca que **combinam** com a
-  última do set (tom compatível e BPM até ±6%). As melhores aparecem primeiro. Clique em **+ Adicionar**.
+- **Sugestões:** depois da primeira música, o sistema mostra as faixas da sua biblioteca que **combinam** com a
+  última do set (tom compatível e BPM até ±6%). As melhores aparecem primeiro. Clique em **Adicionar**.
 - **Adicionar faixa (busca):** procure qualquer música da biblioteca. Se ela não combinar com a última, aparece a
   etiqueta **incompatível**. Você pode adicionar mesmo assim, pois a decisão é sua.
 
 ### 6.2 Ler a análise das transições
 
-Entre cada par de músicas aparece uma etiqueta:
+No topo do editor, a **visão geral do set** mostra cada música como um bloco (largura = duração, altura = energia, cor = tom), a linha do BPM e um LED colorido em cada transição. Logo abaixo, na ordem do set, cada par de músicas é ligado por uma linha da cor da transição:
 
 | Etiqueta | Significado |
 |----------|-------------|
-| 🟢 **Suave** | Tom compatível **e** BPM até 6% de diferença. A mixagem tende a soar natural. |
-| 🟡 **Atenção** | Só um dos dois critérios foi atendido. Dá para mixar com cuidado (ex.: ajustar o pitch). |
-| 🔴 **Arriscada** | Tom incompatível **e** BPM muito diferente. Melhor reorganizar ou usar uma transição de efeito. |
+| **Suave** (verde) | Tom compatível **e** BPM até 6% de diferença. A mixagem tende a soar natural. |
+| **Atenção** (âmbar) | Só um dos dois critérios foi atendido. Dá para mixar com cuidado (ex.: ajustar o pitch). |
+| **Arriscada** (vermelho) | Tom incompatível **e** BPM muito diferente. Melhor reorganizar ou usar uma transição de efeito. |
 
 Ao lado da etiqueta aparece o motivo, por exemplo: *"Tom incompatível (8A → 5A) · BPM +10,2% (acima de 6%)"*.
 
@@ -129,17 +129,17 @@ No topo ficam a **duração total**, o **BPM médio** e a **pontuação harmôni
 - **✕** remove a música do setlist (ela continua na biblioteca).
 
 ### 6.4 Curva de energia
-O gráfico mostra o **BPM** (linha azul, eixo esquerdo) e a **energia** (barras roxas, eixo direito) de cada posição.
+Na visão geral do set, a altura dos blocos é a **energia** e a linha clara é o **BPM**.
 Um bom set costuma **começar calmo, crescer e terminar no pico**.
 
 ### 6.5 Outras ações
-- **✏️ Editar nome, descrição ou evento:** no fim da coluna da direita.
-- **⬇ Exportar CSV:** baixa o setlist com a análise de cada transição (abre no Excel).
+- **Editar nome, descrição ou evento:** no fim da coluna da direita.
+- **Exportar CSV:** baixa o setlist com a análise de cada transição (abre no Excel).
 - **Excluir setlist:** pede confirmação; as músicas continuam na biblioteca.
 
 ## 7. Roda de Camelot (ajuda)
 
-Menu **🎡 Roda de Camelot**. Clique em qualquer tom para ver com quais ele combina. As regras são:
+Menu **Roda de Camelot**. Clique em qualquer tom para ver com quais ele combina. As regras são:
 
 - **mesmo tom** (8A → 8A);
 - **vizinho**, um número para cima ou para baixo com a mesma letra (8A → 7A ou 9A; o 12 é vizinho do 1);

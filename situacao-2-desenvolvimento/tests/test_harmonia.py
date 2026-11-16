@@ -159,9 +159,11 @@ def test_analise_sem_transicoes_nao_tem_pontuacao(faixas):
 
 
 def test_curva_de_energia():
-    c = h.curva_energia([F("8A", 118, 4, titulo="A"), F("9A", 120.5, 7, titulo="B")])
-    assert c == {"rotulos": ["1", "2"], "titulos": ["A", "B"], "bpm": [118.0, 120.5],
-                 "energia": [4, 7], "tons": ["8A", "9A"]}
+    c = h.curva_energia([F("8A", 118, 4, 300, titulo="A"), F("9A", 120.5, 7, 240, titulo="B"),
+                         F("3B", 140, 9, 200, titulo="C")])
+    assert c == {"rotulos": ["1", "2", "3"], "titulos": ["A", "B", "C"], "bpm": [118.0, 120.5, 140.0],
+                 "energia": [4, 7, 9], "tons": ["8A", "9A", "3B"], "duracoes": [300, 240, 200],
+                 "niveis": [h.SUAVE, h.ARRISCADA]}
 
 
 # ---------------------------------------------------------------- RN11: sugestões

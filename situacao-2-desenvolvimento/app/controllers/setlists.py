@@ -40,7 +40,7 @@ def _validar_vinculo_evento(limpos: dict, erros: dict) -> None:
 def listar():
     setlists = db.session.scalars(select(Setlist).where(Setlist.id_usuario == g.usuario.id)
                                   .order_by(Setlist.atualizado_em.desc(), Setlist.id.desc())).all()
-    linhas = [(s, harmonia.analisar_setlist(s.faixas)) for s in setlists]
+    linhas = [(s, harmonia.analisar_setlist(s.faixas), harmonia.curva_energia(s.faixas)) for s in setlists]
     return render_template("setlists/lista.html", linhas=linhas, eventos=_eventos_do_usuario(),
                            dados={"id_evento": request.args.get("evento", "")}, erros={})
 
@@ -53,7 +53,7 @@ def novo():
     if erros:
         flash("Corrija os campos destacados para criar o setlist.", "bad")
         setlists = db.session.scalars(select(Setlist).where(Setlist.id_usuario == g.usuario.id)).all()
-        linhas = [(s, harmonia.analisar_setlist(s.faixas)) for s in setlists]
+        linhas = [(s, harmonia.analisar_setlist(s.faixas), harmonia.curva_energia(s.faixas)) for s in setlists]
         return render_template("setlists/lista.html", linhas=linhas, eventos=_eventos_do_usuario(),
                                dados=request.form, erros=erros), 400
     setlist = Setlist(id_usuario=g.usuario.id, **limpos)

@@ -9,8 +9,8 @@
       "Os filtros da biblioteca (BPM mínimo/máximo, tom, gênero) mostram somente faixas que atendem ao filtro.",
       "No editor, a duração total é igual à soma das durações das faixas (confira com a calculadora).",
       "O BPM médio mostrado no editor está correto.",
-      "As 💡 Sugestões só trazem faixas com tom compatível (confira na Roda de Camelot) e BPM até 6% de diferença.",
-      "Ao reordenar (▲ ▼) ou remover (X), as etiquetas 🟢🟡🔴 e a pontuação harmônica são recalculadas.",
+      "As Sugestões só trazem faixas com tom compatível (confira na Roda de Camelot) e BPM até 6% de diferença.",
+      "Ao reordenar (▲ ▼) ou remover (X), as cores das transições e a pontuação harmônica são recalculadas.",
       "O CSV exportado tem as mesmas faixas, na mesma ordem e com a mesma análise do setlist.",
       "Editar o BPM de uma faixa muda a análise dos setlists que a usam.",
       "Excluir um evento não apaga os setlists que estavam vinculados a ele."
@@ -29,7 +29,7 @@
       "Sempre soube em que tela eu estava (título e trilha no topo da página).",
       "Depois de cada ação, o sistema mostrou uma confirmação (mensagem verde ou azul).",
       "Consegui cancelar ou desfazer ações (ex.: cancelar uma exclusão).",
-      "Entendi o significado de 🟢 Suave, 🟡 Atenção e 🔴 Arriscada sem ler a página de ajuda.",
+      "Entendi o significado das transições Suave, Atenção e Arriscada sem ler a página de ajuda.",
       "As cores, o tamanho das letras e o contraste são confortáveis para ler.",
       "Em quantas tarefas precisei de ajuda ou desisti? ____"
     ]
@@ -42,7 +42,7 @@
     "itens": [
       "As sugestões de próxima faixa combinariam de verdade numa mixagem.",
       "A tolerância de ±6% de BPM é adequada (nem rígida, nem permissiva demais).",
-      "As transições marcadas como 🔴 Arriscada realmente seriam difíceis de mixar.",
+      "As transições marcadas como Arriscada (vermelho) realmente seriam difíceis de mixar.",
       "A curva de energia ajuda a planejar a progressão do set (abertura → pico).",
       "A escala de energia de 1 a 10 é útil para classificar as faixas.",
       "A conversão de tom (ex.: Am → 8A, F#m → 11A) está correta para as músicas que conheço.",
@@ -61,7 +61,7 @@
       "Nenhuma tela precisa ser arrastada para o lado (sem rolagem horizontal).",
       "Os botões são grandes o suficiente para tocar com o dedo sem errar.",
       "O menu do topo rola para os lados e todas as opções são alcançáveis.",
-      "O gráfico da curva de energia e a Roda de Camelot aparecem e dão para ler no celular.",
+      "A visão geral do set e a Roda de Camelot aparecem e dão para ler no celular.",
       "Virar o celular na horizontal não quebra o layout.",
       "Num segundo navegador, o sistema funciona igual. Qual? ________",
       "Importar um CSV pelo celular funciona (se o celular permitir escolher o arquivo).",

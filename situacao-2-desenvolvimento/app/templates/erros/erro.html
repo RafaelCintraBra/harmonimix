@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 {% block titulo %}{{ titulo }}{% endblock %}
-{% block trilha %}Erro {{ codigo }}{% endblock %}
 {% block conteudo %}
 <div class="card empty">
-  <div class="big">🎚️</div>
-  <h2 style="margin:0 0 6px">{{ titulo }}</h2>
-  <p class="muted">{{ mensagem }}</p>
+  <strong>Erro {{ codigo }}</strong>
+  <p class="muted" style="margin:0 auto 14px">{{ mensagem }}</p>
   <a class="btn primary" href="{{ url_for('painel.inicio') }}">Voltar ao painel</a>
 </div>
 {% endblock %}

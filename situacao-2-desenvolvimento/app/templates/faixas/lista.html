@@ -2,15 +2,14 @@
 {% from "_macros.html" import tom, energia, csrf %}
 {% block titulo %}Biblioteca{% endblock %}
 {% block cabecalho %}Biblioteca de faixas{% endblock %}
-{% block trilha %}Início › Biblioteca{% endblock %}
 {% block acoes %}
-  <a class="btn" href="{{ url_for('faixas.importar') }}">⬆ Importar CSV</a>
-  <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Nova faixa</a>
+  <a class="btn" href="{{ url_for('faixas.importar') }}">Importar playlist</a>
+  <a class="btn primary" href="{{ url_for('faixas.nova') }}">Nova faixa</a>
 {% endblock %}
 {% block conteudo %}
-<form class="card" method="get" style="margin-bottom:14px" role="search">
+<form class="card" method="get" style="margin-bottom:20px;padding:16px" role="search">
   <div class="grid filtros" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;align-items:end">
-    <div><label for="q">Buscar</label><input id="q" name="q" value="{{ filtros.q }}" placeholder="Título ou artista…"></div>
+    <div><label for="q">Buscar</label><input id="q" name="q" value="{{ filtros.q }}" placeholder="Título ou artista"></div>
     <div><label for="genero">Gênero</label>
       <select id="genero" name="genero"><option value="">Todos</option>
         {% for gen in generos %}<option value="{{ gen.id }}" {{ 'selected' if filtros.genero == gen.id|string }}>{{ gen.nome }}</option>{% endfor %}
@@ -27,20 +26,20 @@
   <input type="hidden" name="ordem" value="{{ ordem }}">
 </form>
 
-<div class="card table-wrap">
+<div class="table-wrap">
   {% if pagina.items %}
   {% macro col(chave, rotulo) -%}
-    <a class="{{ 'on' if ordem == chave }}" href="{{ url_for('faixas.listar', ordem=chave, **filtros) }}">{{ rotulo }}{{ ' ▾' if ordem == chave }}</a>
+    <a class="{{ 'on' if ordem == chave }}" href="{{ url_for('faixas.listar', ordem=chave, **filtros) }}">{{ rotulo }}{{ ' ↓' if ordem == chave }}</a>
   {%- endmacro %}
   <table>
-    <thead><tr><th>{{ col('titulo', 'Título') }}</th><th>{{ col('artista', 'Artista') }}</th><th>{{ col('bpm', 'BPM') }}</th>
-      <th>{{ col('tom', 'Tom') }}</th><th>Gênero</th><th>{{ col('energia', 'Energia') }}</th><th>Duração</th><th><span class="sr-only">Ações</span></th></tr></thead>
+    <thead><tr><th>{{ col('titulo', 'Título') }}</th><th>{{ col('artista', 'Artista') }}</th><th class="num">{{ col('bpm', 'BPM') }}</th>
+      <th>{{ col('tom', 'Tom') }}</th><th>Gênero</th><th>{{ col('energia', 'Energia') }}</th><th class="num">Duração</th><th><span class="sr-only">Ações</span></th></tr></thead>
     <tbody>
     {% for f in pagina.items %}
       <tr>
-        <td><b>{{ f.titulo }}</b></td><td class="muted">{{ f.artista }}</td><td>{{ f.bpm_fmt }}</td>
+        <td><b>{{ f.titulo }}</b></td><td class="muted">{{ f.artista }}</td><td class="num">{{ f.bpm_fmt }}</td>
         <td>{{ tom(f.cod_tom) }}</td><td>{% if f.genero %}<span class="tag">{{ f.genero.nome }}</span>{% endif %}</td>
-        <td>{{ energia(f.energia) }}</td><td>{{ f.duracao_fmt }}</td>
+        <td>{{ energia(f.energia) }}</td><td class="num">{{ f.duracao_fmt }}</td>
         <td><div class="row" style="flex-wrap:nowrap;gap:6px">
           <a class="btn sm" href="{{ url_for('faixas.editar', id_faixa=f.id) }}">Editar</a>
           <form class="inline" method="post" action="{{ url_for('faixas.excluir', id_faixa=f.id) }}"
@@ -65,13 +64,13 @@
     {% endif %}
   </div>
   {% elif total_biblioteca %}
-    <div class="empty"><div class="big">🔍</div>Nenhuma faixa encontrada com esses filtros.
+    <div class="empty"><strong>Nenhuma faixa encontrada com esses filtros.</strong>Tente ampliar a faixa de BPM ou limpar a busca.
       <div style="margin-top:10px"><a class="btn" href="{{ url_for('faixas.listar') }}">Limpar filtros</a></div></div>
   {% else %}
-    <div class="empty"><div class="big">🎵</div>Sua biblioteca está vazia.
-      <div class="row" style="justify-content:center;margin-top:10px">
-        <a class="btn primary" href="{{ url_for('faixas.nova') }}">+ Cadastrar faixa</a>
-        <a class="btn" href="{{ url_for('faixas.importar') }}">Importar CSV</a></div></div>
+    <div class="empty"><strong>Sua biblioteca está vazia.</strong>Cadastre as suas músicas com BPM e tom, ou importe a playlist do Rekordbox.
+      <div class="row">
+        <a class="btn primary" href="{{ url_for('faixas.nova') }}">Cadastrar faixa</a>
+        <a class="btn" href="{{ url_for('faixas.importar') }}">Importar playlist</a></div></div>
   {% endif %}
 </div>
 {% endblock %}

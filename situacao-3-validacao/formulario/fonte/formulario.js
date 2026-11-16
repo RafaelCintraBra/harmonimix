@@ -60,15 +60,15 @@ function caixa(dica, altura = 1800) {
 const SIM_NAO = "☐ Funcionou   ☐ Não funcionou   ☐ Não testei";
 
 const tarefas = [
-  ["T1", "Criar uma conta (Crie agora), sair (↩ Sair) e entrar de novo com e-mail e senha."],
-  ["T2", "Biblioteca → + Nova faixa: tente salvar com BPM 250 (deve dar erro). Depois corrija e salve uma faixa válida."],
+  ["T1", "Criar uma conta (Criar conta), sair (Sair) e entrar de novo com e-mail e senha."],
+  ["T2", "Biblioteca → Nova faixa: tente salvar com BPM 250 (deve dar erro). Depois corrija e salve uma faixa válida."],
   ["T3", "Biblioteca: buscar por nome, filtrar por BPM (ex.: 118 a 125) e ordenar clicando na coluna BPM."],
-  ["T4", "Biblioteca → ⬆ Importar CSV: importe o arquivo modelo-importacao.csv (enviado junto com este formulário)."],
-  ["T5", "Eventos → + Novo evento: cadastre um evento com data e local."],
-  ["T6", "Setlists: crie um setlist vinculado ao evento. No editor, adicione uma faixa pela busca e depois outras pelas 💡 Sugestões."],
-  ["T7", "No editor: observe as etiquetas 🟢 Suave / 🟡 Atenção / 🔴 Arriscada. Use ▲ ▼ para reordenar e X para remover. A análise mudou?"],
-  ["T8", "No editor: confira o gráfico Curva de energia, a duração total e a pontuação harmônica."],
-  ["T9", "No editor: ⬇ Exportar CSV e abra o arquivo no Excel ou Planilhas."],
+  ["T4", "Biblioteca → Importar playlist: importe o arquivo modelo-importacao.csv (enviado junto com este formulário)."],
+  ["T5", "Eventos → Novo evento: cadastre um evento com data e local."],
+  ["T6", "Setlists: crie um setlist vinculado ao evento. No editor, adicione uma faixa pela busca e depois outras pelas Sugestões."],
+  ["T7", "No editor: observe a visão geral do set e as transições Suave (verde), Atenção (âmbar) e Arriscada (vermelho). Use ▲ ▼ para reordenar e X para remover. A análise mudou?"],
+  ["T8", "No editor: confira a visão geral do set (blocos e linha de BPM), a duração total e a pontuação harmônica."],
+  ["T9", "No editor: Exportar CSV e abra o arquivo no Excel ou Planilhas."],
   ["T10", "Roda de Camelot: clique em alguns tons e veja quais combinam."],
   ["T11", "Tente excluir uma faixa que está num setlist (deve ser bloqueado, com explicação)."],
   ["T12", "Abra o sistema no celular e repita uma tarefa qualquer."],
@@ -167,7 +167,7 @@ const doc = new Document({
       tabela([4600, 1007, 1007, 1008, 1008, 1008], [
         ["Critério (1 = ruim · 5 = ótimo)", "1", "2", "3", "4", "5"],
         ...["Facilidade de uso", "Visual / aparência", "Clareza dos textos e mensagens de erro",
-          "Entendi as etiquetas 🟢 🟡 🔴 e as sugestões", "Utilidade para um DJ", "Nota geral do sistema"]
+          "Entendi as cores das transições e as sugestões", "Utilidade para um DJ", "Nota geral do sistema"]
           .map((c) => [c, "☐", "☐", "☐", "☐", "☐"]),
       ], { cabecalho: true }),
       h2("Sugestões de melhoria"),
