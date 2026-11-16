@@ -35,7 +35,7 @@ situacao-2-desenvolvimento/
 │   │   └── csv_service.py    ← importar faixas / exportar setlist
 │   ├── templates/            ← VIEW: páginas HTML (Jinja2)
 │   └── static/               ← VIEW: css/style.css e js/app.js
-├── tests/                    ← 173 testes automatizados (pytest)
+├── tests/                    ← 217 testes automatizados (pytest)
 ├── exemplos/                 ← planilhas CSV para importar
 └── docs/                     ← manual, relatório de testes, roteiro do vídeo, prints
 ```
@@ -139,7 +139,7 @@ Para rodar os mesmos testes contra um MySQL de teste:
 TEST_DATABASE_URL="mysql+pymysql://USUARIO:SENHA@localhost/harmonimix_test?charset=utf8mb4" python -m pytest
 ```
 
-**Resultado atual:** 173 testes passando, **cobertura de 99%**, validados em **SQLite** e em **MariaDB 10.11**
+**Resultado atual:** 217 testes passando, **cobertura de 99%**, validados em **SQLite** e em **MariaDB 10.11**
 (compatível com MySQL). Detalhes em [docs/RELATORIO-TESTES.md](docs/RELATORIO-TESTES.md).
 
 ---

@@ -4,11 +4,11 @@
 {% block trilha %}Início › <a href="{{ url_for('faixas.listar') }}">Biblioteca</a> › Importar CSV{% endblock %}
 {% block conteudo %}
 <div class="grid g2">
-  <form class="card" method="post" enctype="multipart/form-data">
+  <form class="card" method="post" enctype="multipart/form-data" style="align-self:start">
     {{ csrf() }}
-    <h3>Enviar planilha</h3>
-    <div class="field"><label for="arquivo">Arquivo CSV (máx. 1 MB)</label>
-      <input id="arquivo" name="arquivo" type="file" accept=".csv,text/csv" required></div>
+    <h3>Enviar planilha ou playlist</h3>
+    <div class="field"><label for="arquivo">Arquivo .csv ou .txt do Rekordbox (máx. 1 MB)</label>
+      <input id="arquivo" name="arquivo" type="file" accept=".csv,.txt,text/csv,text/plain" required></div>
     <div class="row"><button class="btn primary" type="submit">Importar</button>
       <a class="btn" href="{{ url_for('faixas.listar') }}">Voltar</a></div>
 
@@ -25,18 +25,31 @@
       {% endif %}
     {% endif %}
   </form>
+  <div>
+  <div class="card" style="margin-bottom:14px">
+    <h3>🎛️ Do Rekordbox</h3>
+    <ol style="padding-left:18px;margin:0">
+      <li>Na lista de músicas, clique com o botão direito no cabeçalho das colunas e deixe visíveis
+        <b>Track Title</b>, <b>Artist</b>, <b>BPM</b>, <b>Key</b> e <b>Time</b> (Genre é opcional).</li>
+      <li>Clique com o botão direito na playlist → <b>Exportar uma playlist para um arquivo</b> → formato <b>.txt</b>.</li>
+      <li>Envie o arquivo .txt aqui.</li>
+    </ol>
+    <p class="muted" style="font-size:13px;margin:10px 0 0">O tom pode estar em notação musical (Am, F#m) ou Camelot (8A):
+      o sistema converte sozinho. Músicas ainda não analisadas (sem BPM ou tom) aparecem na lista de erros.</p>
+  </div>
   <div class="card">
-    <h3>Formato esperado</h3>
+    <h3>Planilha CSV (Excel, Google Planilhas)</h3>
     <p>A primeira linha é o cabeçalho. Separador: <code>;</code> ou <code>,</code>.</p>
 <pre class="csv">titulo;artista;bpm;tom;genero;energia;duracao
 Aurora Boreal;Lumen Drift;118;8A;Deep House;4;06:12
 Maré Alta;Coral Sound;120;9A;Deep House;5;05:45</pre>
     <ul>
-      <li><b>Obrigatórias:</b> titulo, artista, bpm, tom, duracao</li>
+      <li><b>Obrigatórias:</b> titulo, artista, bpm, tom (8A ou Am), duracao</li>
       <li><b>Opcionais:</b> genero (é criado se não existir), energia (1–10, padrão 5)</li>
       <li>Faixas com o mesmo título e artista que já estão na biblioteca são ignoradas.</li>
     </ul>
     <p class="muted" style="font-size:13px">Dica: dá para montar a planilha no Excel ou Google Planilhas e salvar como CSV.</p>
+  </div>
   </div>
 </div>
 {% endblock %}

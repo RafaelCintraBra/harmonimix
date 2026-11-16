@@ -9,7 +9,7 @@ import re
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 
-from .harmonia import tom_valido
+from .harmonia import normalizar_tom
 
 RE_EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 BPM_MIN, BPM_MAX = 60, 200
@@ -96,7 +96,8 @@ def validar_faixa(dados: dict, ids_generos: set[int] | None = None) -> tuple[dic
     erros = {}
     titulo = _texto(dados, "titulo")
     artista = _texto(dados, "artista")
-    tom = _texto(dados, "cod_tom").upper()
+    tom_digitado = _texto(dados, "cod_tom")
+    tom = normalizar_tom(tom_digitado) or tom_digitado.upper()   # aceita 8A, Am, F#m, 1m...
 
     if not titulo:
         erros["titulo"] = MSG_OBRIGATORIO.format(campo="título")
@@ -114,8 +115,10 @@ def validar_faixa(dados: dict, ids_generos: set[int] | None = None) -> tuple[dic
     elif not BPM_MIN <= bpm <= BPM_MAX:
         erros["bpm"] = f"O BPM deve estar entre {BPM_MIN} e {BPM_MAX}."
 
-    if not tom_valido(tom):
+    if not tom_digitado:
         erros["cod_tom"] = "Selecione o tom da faixa."
+    elif normalizar_tom(tom_digitado) is None:
+        erros["cod_tom"] = f"Tom “{tom_digitado}” não reconhecido. Use o código Camelot (ex.: 8A) ou a notação musical (ex.: Am)."
 
     id_genero = None
     genero_txt = _texto(dados, "id_genero")

@@ -7,9 +7,9 @@
 
 | Indicador | Resultado |
 |-----------|-----------|
-| Testes automatizados | **173** |
-| Aprovados | **173 (100%)** |
-| Cobertura de código (`app/`) | **99%** (1.036 instruções, 13 não executadas) · meta do RNF09: ≥ 80% ✅ |
+| Testes automatizados | **217** |
+| Aprovados | **217 (100%)** |
+| Cobertura de código (`app/`) | **99%** (1.078 instruções, 15 não executadas) · meta do RNF09: ≥ 80% ✅ |
 | Bancos de dados testados | **SQLite** (memória) e **MariaDB 10.11** (compatível com MySQL 8) |
 | Tempo de execução | ≈ 11 s (SQLite) · ≈ 15 s (MariaDB) |
 
@@ -17,8 +17,8 @@
 
 | Nível do Modelo V | O que verifica | Arquivos | Qtd. |
 |-------------------|----------------|----------|:----:|
-| **Teste unitário** | Regras de negócio isoladas, sem banco nem servidor: Roda de Camelot, BPM, classificação, sugestões, validações | `test_harmonia.py`, `test_validacao.py` | 110 |
-| **Teste de integração** | Rota → Controller → Service → Model → banco → HTML: telas, formulários, mensagens, CSV | `test_auth.py`, `test_faixas.py`, `test_setlists.py`, `test_eventos_ajuda.py` | 49 |
+| **Teste unitário** | Regras de negócio isoladas, sem banco nem servidor: Roda de Camelot, conversão de tons (Am → 8A), BPM, classificação, sugestões, validações | `test_harmonia.py`, `test_validacao.py` | 152 |
+| **Teste de integração** | Rota → Controller → Service → Model → banco → HTML: telas, formulários, mensagens, CSV | `test_auth.py`, `test_faixas.py`, `test_setlists.py`, `test_eventos_ajuda.py` | 51 |
 | **Segurança e banco** | Isolamento entre usuários, CSRF, XSS, SQL Injection, páginas de erro, restrições do banco | `test_seguranca_e_banco.py` | 14 |
 | Teste de sistema / aceitação | Uso real no navegador por colegas | *Situação 3* | — |
 
@@ -35,9 +35,10 @@
 | RF07, RF08, RN10 | Adicionar, faixa repetida, remover (reorganiza posições), subir/descer | `test_adicionar_*`, `test_remover_*`, `test_mover_*` |
 | RF09, RN11 | Sugestões: filtro por tom e BPM, ordem, limite de 10 | `test_sugestoes_*` |
 | RF10, RF11, RN06–RN09 | Compatibilidade de tom (incl. 12↔1), BPM com limite exato de 6%, Suave/Atenção/Arriscada, pontuação | `test_tipo_compatibilidade` (11 casos), `test_bpm_compativel_*`, `test_transicao_*` |
+| RN03 (formatos de tom) | Conversão de notação musical, Camelot e Open Key; as 24 tonalidades cobrem a roda inteira | `test_normalizar_tom` (32 casos), `test_todas_as_24_tonalidades_musicais_cobrem_a_roda` |
 | RF12, RF13 | Curva de energia, duração total, BPM médio | `test_curva_de_energia`, `test_analise_*` |
 | RF15 | Painel com totais e estado vazio | `test_painel_*` |
-| RF16, RF17 | Importar CSV (`;` ou `,`, UTF-8 ou Latin-1, cabeçalho em inglês, erros por linha); exportar CSV | `test_importar_csv*`, `test_exportar_csv` |
+| RF16, RF17 | Importar CSV (`;`, `,` ou tabulação; UTF-8, UTF-16 ou Latin-1; cabeçalho em inglês; erros por linha), **playlist do Rekordbox** com tom em notação musical; exportar CSV | `test_importar_csv*`, `test_importar_playlist_do_rekordbox_utf16`, `test_exportar_csv` |
 | RN12 | Faixa em uso não pode ser excluída (na aplicação **e** no banco) | `test_excluir_faixa_em_setlist_e_bloqueado_rn12`, `test_banco_impede_excluir_faixa_em_uso` |
 | RNF02 | Usuário não vê nem altera dados de outro (9 rotas → 404) | `test_usuario_nao_acessa_dados_de_outro` |
 | RNF03 | CSRF, XSS, SQL Injection | `test_csrf_*`, `test_textos_do_usuario_sao_escapados_xss`, `test_busca_com_aspas_*` |
@@ -92,6 +93,6 @@ app/services/harmonia.py            132      0   100%
 app/services/validacao.py           129      0   100%
 app/services/csv_service.py          76      3    96%
 ...
-TOTAL                              1036     13    99%
-173 passed
+TOTAL                              1078     15    99%
+217 passed
 ```

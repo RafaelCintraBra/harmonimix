@@ -137,7 +137,7 @@ def test_importar_csv(logado, app, usuario, criar_faixa):
     html = _enviar(logado, csv).get_data(as_text=True)
     assert "2 faixa(s) importada(s) com sucesso." in html
     assert "1 já existia(m)" in html
-    assert "Linha 6: O BPM deve estar entre 60 e 200." in html
+    assert "Linha 6 (“Quebrada”): O BPM deve estar entre 60 e 200." in html
     with app.app_context():
         nova = db.session.scalar(select(Faixa).where(Faixa.titulo == "Nova Vibe"))
         assert nova.cod_tom == "5B" and nova.energia == 5 and nova.genero.nome == "Gênero Novo"
@@ -157,7 +157,7 @@ def test_importar_csv_sem_colunas_obrigatorias(logado):
 
 def test_importar_csv_vazio_ou_sem_arquivo(logado):
     assert "O arquivo está vazio." in _enviar(logado, "  ").get_data(as_text=True)
-    assert "O arquivo precisa ser .csv." in _enviar(logado, "x", nome="musica.mp3").get_data(as_text=True)
+    assert "O arquivo precisa ser .csv ou .txt" in _enviar(logado, "x", nome="musica.mp3").get_data(as_text=True)
     html = logado.post("/faixas/importar", data={}, follow_redirects=True).get_data(as_text=True)
     assert "Selecione um arquivo CSV." in html
 
@@ -166,3 +166,36 @@ def test_importar_csv_so_duplicadas(logado, usuario, criar_faixa):
     criar_faixa(usuario, titulo="A", artista="B")
     html = _enviar(logado, "titulo;artista;bpm;tom;duracao\nA;B;120;8A;05:00\n").get_data(as_text=True)
     assert "Nenhuma faixa nova" in html
+
+
+# ---------------------------------------------------------------- importação do Rekordbox
+REKORDBOX = ("#\tArtwork\tTrack Title\tArtist\tAlbum\tGenre\tBPM\tRating\tTime\tKey\tDate Added\n"
+             "1\t\tAurora Boreal\tLumen Drift\t\tDeep House\t118.00\t\t06:12\tAm\t2026-11-01\n"
+             "2\t\tMaré Alta\tCoral Sound, Rio Pulse\t\tDeep House\t120.00\t\t05:45\tEm\t2026-11-01\n"
+             "3\t\tNeon\tRio Pulse\t\tHouse\t122.00\t\t5:30\t9B\t2026-11-01\n"
+             "4\t\tSem Análise\tX\t\t\t\t\t04:00\t\t2026-11-01\n")
+
+
+def test_importar_playlist_do_rekordbox_utf16(logado, app):
+    import io
+    bruto = REKORDBOX.encode("utf-16")            # o Rekordbox exporta em UTF-16 com BOM
+    resp = logado.post("/faixas/importar", data={"arquivo": (io.BytesIO(bruto), "playlist.txt")},
+                       content_type="multipart/form-data", follow_redirects=True)
+    html = resp.get_data(as_text=True)
+    assert "3 faixa(s) importada(s)" in html
+    assert "Linha 5 (“Sem Análise”)" in html and "Selecione o tom da faixa." in html
+    with app.app_context():
+        faixas = {f.titulo: f for f in db.session.scalars(select(Faixa)).all()}
+        assert faixas["Aurora Boreal"].cod_tom == "8A"            # Am -> 8A
+        assert faixas["Maré Alta"].cod_tom == "9A"                # Em -> 9A
+        assert faixas["Maré Alta"].artista == "Coral Sound, Rio Pulse"
+        assert faixas["Neon"].cod_tom == "9B" and faixas["Neon"].duracao_seg == 330
+
+
+def test_rekordbox_sem_coluna_key_explica_o_que_fazer(logado):
+    import io
+    txt = "#\tTrack Title\tArtist\tBPM\tTime\n1\tA\tB\t120.00\t05:00\n"
+    resp = logado.post("/faixas/importar", data={"arquivo": (io.BytesIO(txt.encode("utf-16")), "p.txt")},
+                       content_type="multipart/form-data", follow_redirects=True)
+    html = resp.get_data(as_text=True)
+    assert "Colunas obrigatórias ausentes no cabeçalho: tom." in html and "deixe visíveis as colunas" in html

@@ -1,9 +1,13 @@
 """Importação de faixas (RF16) e exportação de setlist (RF17) em CSV.
 
-Formato de importação (primeira linha = cabeçalho; separador vírgula ou ponto e vírgula):
+Formato de importação (primeira linha = cabeçalho; separador ponto e vírgula, vírgula ou tabulação):
     titulo;artista;bpm;tom;genero;energia;duracao
     Aurora Boreal;Lumen Drift;118;8A;Deep House;4;06:12
 `genero` e `energia` são opcionais. O gênero é criado automaticamente se ainda não existir.
+
+Também aceita a playlist exportada pelo Rekordbox (.txt separado por tabulação, UTF-16), com as
+colunas "Track Title", "Artist", "BPM", "Key" e "Time". O tom pode vir em Camelot (8A), em notação
+musical (Am, F#m, Db) ou em Open Key (1m): a conversão é feita por `harmonia.normalizar_tom`.
 """
 from __future__ import annotations
 
@@ -20,6 +24,19 @@ from .validacao import validar_faixa
 
 COLUNAS_OBRIGATORIAS = {"titulo", "artista", "bpm", "tom", "duracao"}
 MAX_LINHAS = 2000
+BOM = chr(0xFEFF)   # marca de ordem de bytes: faz o Excel abrir os acentos corretamente
+
+# Nomes de coluna aceitos (português, inglês e os usados por Rekordbox, Serato, Traktor e Mixed In Key)
+_SINONIMOS = {
+    "titulo": ("título", "title", "track title", "track", "name", "nome", "música", "musica"),
+    "artista": ("artist", "artists", "artistas"),
+    "bpm": (),
+    "tom": ("key", "initial key", "tonalidade", "camelot"),
+    "duracao": ("duração", "duration", "time", "length"),
+    "genero": ("gênero", "genre"),
+    "energia": ("energy", "energy level"),
+}
+_CABECALHOS = {sinonimo: padrao for padrao, lista in _SINONIMOS.items() for sinonimo in lista}
 
 
 @dataclass
@@ -30,10 +47,23 @@ class ResultadoImportacao:
 
 
 def _normalizar_cabecalho(nome: str) -> str:
-    nome = (nome or "").strip().lower().lstrip("﻿")
-    trocas = {"título": "titulo", "duração": "duracao", "gênero": "genero", "key": "tom",
-              "title": "titulo", "artist": "artista", "duration": "duracao", "energy": "energia"}
-    return trocas.get(nome, nome)
+    nome = (nome or "").strip().strip('"').lstrip(BOM).strip().lower()
+    return _CABECALHOS.get(nome, nome)
+
+
+def decodificar_arquivo(bruto: bytes) -> str:
+    """Detecta a codificação: UTF-16 (Rekordbox), UTF-8 (com ou sem BOM) ou Latin-1 (Excel antigo)."""
+    if bruto.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return bruto.decode("utf-16")
+    try:
+        return bruto.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return bruto.decode("latin-1")
+
+
+def _detectar_separador(primeira_linha: str) -> str:
+    contagem = {sep: primeira_linha.count(sep) for sep in ("\t", ";", ",")}
+    return max(contagem, key=contagem.get) if any(contagem.values()) else ";"
 
 
 def importar_faixas(conteudo: str, id_usuario: int) -> ResultadoImportacao:
@@ -42,14 +72,15 @@ def importar_faixas(conteudo: str, id_usuario: int) -> ResultadoImportacao:
         resultado.erros.append("O arquivo está vazio.")
         return resultado
 
-    primeira_linha = conteudo.splitlines()[0]
-    separador = ";" if primeira_linha.count(";") >= primeira_linha.count(",") else ","
+    separador = _detectar_separador(conteudo.splitlines()[0])
     leitor = csv.DictReader(io.StringIO(conteudo), delimiter=separador)
     leitor.fieldnames = [_normalizar_cabecalho(c) for c in (leitor.fieldnames or [])]
     faltando = COLUNAS_OBRIGATORIAS - set(leitor.fieldnames)
     if faltando:
+        dica = (" No Rekordbox, deixe visíveis as colunas Track Title, Artist, BPM, Key e Time "
+                "antes de exportar." if separador == "\t" else "")
         resultado.erros.append(
-            "Colunas obrigatórias ausentes no cabeçalho: " + ", ".join(sorted(faltando)) + ".")
+            "Colunas obrigatórias ausentes no cabeçalho: " + ", ".join(sorted(faltando)) + "." + dica)
         return resultado
 
     generos = {g.nome.lower(): g for g in db.session.scalars(select(Genero)).all()}
@@ -80,7 +111,9 @@ def importar_faixas(conteudo: str, id_usuario: int) -> ResultadoImportacao:
                  "energia": linha.get("energia"), "duracao": linha.get("duracao")}
         limpos, erros = validar_faixa(dados)
         if erros:
-            resultado.erros.append(f"Linha {numero}: " + " ".join(erros.values()))
+            titulo = (linha.get("titulo") or "").strip()
+            rotulo = f"Linha {numero}" + (f" (“{titulo}”)" if titulo else "")
+            resultado.erros.append(f"{rotulo}: " + " ".join(erros.values()))
             continue
         chave = (limpos["titulo"].lower(), limpos["artista"].lower())
         if chave in existentes:
@@ -110,4 +143,4 @@ def exportar_setlist(setlist: Setlist) -> str:
             transicao.rotulo.split(" ", 1)[1] if transicao else "",
             transicao.motivo if transicao else "",
         ])
-    return "﻿" + saida.getvalue()  # BOM: o Excel abre os acentos corretamente
+    return BOM + saida.getvalue()

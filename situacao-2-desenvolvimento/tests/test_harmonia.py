@@ -16,6 +16,32 @@ def test_tom_valido_rejeita_codigos_invalidos(codigo):
     assert not h.tom_valido(codigo)
 
 
+# ---------------------------------------------------------------- conversão de formatos de tom
+@pytest.mark.parametrize("texto,camelot", [
+    ("8A", "8A"), (" 12b ", "12B"),
+    # notação musical (Rekordbox "Classic", Serato, iTunes)
+    ("Am", "8A"), ("C", "8B"), ("F#m", "11A"), ("Gbm", "11A"), ("Dbm", "12A"), ("C#m", "12A"),
+    ("Abm", "1A"), ("G#m", "1A"), ("B", "1B"), ("Bm", "10A"), ("Bbm", "3A"), ("Bb", "6B"),
+    ("Eb", "5B"), ("Ebm", "2A"), ("E", "12B"), ("Db", "3B"), ("F", "7B"), ("Fm", "4A"),
+    ("A♭m", "1A"), ("F♯", "2B"), ("A minor", "8A"), ("Amin", "8A"), ("C major", "8B"), ("Cmaj", "8B"),
+    # Open Key (Traktor)
+    ("1d", "8B"), ("1m", "8A"), ("6d", "1B"), ("12m", "7A"), ("5M", "12A"),
+])
+def test_normalizar_tom(texto, camelot):
+    assert h.normalizar_tom(texto) == camelot
+
+
+@pytest.mark.parametrize("texto", [None, "", "H", "13A", "X#m", "Am7", "tom"])
+def test_normalizar_tom_invalido(texto):
+    assert h.normalizar_tom(texto) is None
+
+
+def test_todas_as_24_tonalidades_musicais_cobrem_a_roda():
+    notas = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
+    convertidos = {h.normalizar_tom(n) for n in notas} | {h.normalizar_tom(n + "m") for n in notas}
+    assert convertidos == {f"{n}{m}" for n in range(1, 13) for m in "AB"}
+
+
 def test_decompor_tom():
     assert h.decompor_tom("12b") == (12, "B")
     with pytest.raises(ValueError):

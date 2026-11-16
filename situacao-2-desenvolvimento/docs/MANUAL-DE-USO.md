@@ -58,7 +58,20 @@ Use **Salvar e cadastrar outra** para cadastrar várias seguidas.
 
 ![Formulário com erros](img/04-faixa-erros.png)
 
-### 3.2 Importar várias faixas de uma planilha (CSV)
+### 3.2 Importar a sua playlist do Rekordbox (recomendado)
+
+O jeito mais rápido de trazer as suas músicas: o Rekordbox já analisou o BPM, o tom e a duração.
+
+1. No Rekordbox, clique com o botão direito no **cabeçalho das colunas** da lista de músicas e deixe visíveis
+   **Track Title**, **Artist**, **BPM**, **Key** e **Time** (e **Genre**, se quiser).
+2. Clique com o botão direito na **playlist** → **Exportar uma playlist para um arquivo** → escolha o formato **.txt**.
+   (O nome do menu pode variar um pouco conforme a versão do Rekordbox.)
+3. No HarmoniMix, vá em **Biblioteca → ⬆ Importar CSV** e envie o arquivo `.txt`.
+
+O tom pode estar em notação musical (`Am`, `F#m`, `Db`) ou em Camelot (`8A`): o sistema converte sozinho para a Roda
+de Camelot. Músicas que o Rekordbox ainda não analisou (sem BPM ou tom) aparecem na lista de erros, com o nome.
+
+### 3.3 Importar de uma planilha (CSV)
 
 Clique em **⬆ Importar CSV**. A planilha precisa ter estas colunas na primeira linha:
 
@@ -66,8 +79,8 @@ Clique em **⬆ Importar CSV**. A planilha precisa ter estas colunas na primeira
 titulo;artista;bpm;tom;genero;energia;duracao
 ```
 
-`genero` e `energia` são opcionais. Músicas que já estão na biblioteca são ignoradas, e as linhas com erro são
-listadas com o motivo. Há um modelo pronto em [`exemplos/modelo-importacao.csv`](../exemplos/modelo-importacao.csv).
+`genero` e `energia` são opcionais, e o tom pode ser `8A` ou `Am`. Músicas que já estão na biblioteca são ignoradas,
+e as linhas com erro são listadas com o motivo. Há um modelo pronto em [`exemplos/modelo-importacao.csv`](../exemplos/modelo-importacao.csv).
 
 **Dica:** monte a planilha no Excel ou no Google Planilhas e use **Arquivo → Salvar como → CSV**.
 

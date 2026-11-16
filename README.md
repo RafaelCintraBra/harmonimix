@@ -16,7 +16,7 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 | Pasta | Conteúdo | Status |
 |-------|----------|--------|
 | [`situacao-1-planejamento/`](situacao-1-planejamento/) | Escopo, requisitos, UML, IHC e protótipo, banco de dados (conceitual, lógico, físico) e dicionário de dados | ✅ v2.0 |
-| [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), 173 testes (99% de cobertura), manual de uso, roteiro do vídeo | ✅ |
+| [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), 217 testes (99% de cobertura), manual de uso, roteiro do vídeo | ✅ |
 | [`situacao-3-validacao/`](situacao-3-validacao/) | Plano e relatório de testes, formulário de teste com usuários, feedbacks e correções | ⏳ |
 
 ## 🛠️ Tecnologias

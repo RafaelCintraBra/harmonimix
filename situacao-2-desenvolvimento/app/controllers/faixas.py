@@ -4,7 +4,7 @@ from sqlalchemy import or_, select
 
 from ..extensions import db
 from ..models import Faixa, Genero, ItemSetlist, Setlist, TomCamelot
-from ..services.csv_service import importar_faixas
+from ..services.csv_service import decodificar_arquivo, importar_faixas
 from ..services.validacao import converter_bpm, validar_faixa
 from .auth import login_obrigatorio
 
@@ -130,14 +130,9 @@ def importar():
         if not arquivo or not arquivo.filename:
             flash("Selecione um arquivo CSV.", "bad")
         elif not arquivo.filename.lower().endswith((".csv", ".txt")):
-            flash("O arquivo precisa ser .csv.", "bad")
+            flash("O arquivo precisa ser .csv ou .txt (exportado do Rekordbox).", "bad")
         else:
-            bruto = arquivo.read()
-            try:
-                conteudo = bruto.decode("utf-8-sig")
-            except UnicodeDecodeError:
-                conteudo = bruto.decode("latin-1")
-            resultado = importar_faixas(conteudo, g.usuario.id)
+            resultado = importar_faixas(decodificar_arquivo(arquivo.read()), g.usuario.id)
             if resultado.importadas:
                 flash(f"{resultado.importadas} faixa(s) importada(s) com sucesso.", "ok")
             elif not resultado.erros:

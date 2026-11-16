@@ -85,7 +85,9 @@ def test_validar_faixa_energia_padrao_e_genero_valido():
     ("bpm", "250", "entre 60 e 200"),
     ("bpm", "59.99", "entre 60 e 200"),
     ("bpm", "rápido", "como número"),
-    ("cod_tom", "13A", "Selecione o tom"),
+    ("cod_tom", "", "Selecione o tom"),
+    ("cod_tom", "13A", "Tom “13A” não reconhecido"),
+    ("cod_tom", "H#m", "não reconhecido"),
     ("energia", "11", "de 1 a 10"),
     ("energia", "0", "de 1 a 10"),
     ("duracao", "00:29", "entre 00:30 e 30:00"),
@@ -126,3 +128,8 @@ def test_validar_setlist():
     assert set(erros) == {"nome", "id_evento", "descricao"}
     _, erros = v.validar_setlist({"nome": "x" * 101})
     assert "nome" in erros
+
+
+def test_validar_faixa_aceita_tom_em_notacao_musical():
+    limpos, erros = v.validar_faixa({**FAIXA_OK, "cod_tom": "F#m"})
+    assert erros == {} and limpos["cod_tom"] == "11A"
