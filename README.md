@@ -1,4 +1,4 @@
-# 🎧 HarmoniMix
+# HarmoniMix
 
 **Montador de setlists com mixagem harmônica para DJs.**
 
@@ -11,7 +11,7 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 
 ![Editor de setlist](situacao-2-desenvolvimento/docs/img/07-editor-rascunho.png)
 
-## 📂 Organização do repositório
+## Organização do repositório
 
 | Pasta | Conteúdo | Status |
 |-------|----------|--------|
@@ -19,7 +19,7 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 | [`situacao-2-desenvolvimento/`](situacao-2-desenvolvimento/) | Código-fonte (front-end + back-end MVC), 217 testes (99% de cobertura), manual de uso, roteiro do vídeo | ✅ |
 | [`situacao-3-validacao/`](situacao-3-validacao/) | Plano de testes (Modelo V), 15 testes de sistema no navegador, verificação e rastreabilidade, formulário para 5 testadores, registro de correções | ✅ testes · ⏳ testadores |
 
-## ✅ Qualidade
+## Qualidade
 
 | Nível de teste | Testes | Resultado |
 |----------------|:------:|:---------:|
@@ -30,12 +30,11 @@ O DJ cadastra a sua biblioteca de músicas com **BPM** e **tom** (Roda de Camelo
 
 Cobertura de código: **99%** · Defeitos encontrados e corrigidos: **7** ([registro](situacao-3-validacao/correcoes/REGISTRO-DE-CORRECOES.md))
 
-## 🎬 Vídeos
+## Vídeos
 
-- Demonstração: *(link)*
-- Mudanças adotadas após os testes: *(link)*
+- Demonstração: *(https://youtu.be/mNWXkfMr6B0?feature=shared)*
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 | Camada | Tecnologia |
 |--------|------------|
@@ -45,7 +44,7 @@ Cobertura de código: **99%** · Defeitos encontrados e corrigidos: **7** ([regi
 | ORM | SQLAlchemy |
 | Testes | pytest + pytest-cov |
 
-## ▶️ Rodar o sistema (início rápido)
+## Rodar o sistema (início rápido)
 
 ```bash
 cd situacao-2-desenvolvimento
@@ -58,7 +57,7 @@ flask --app run run --debug
 Acesse http://127.0.0.1:5000. Instruções completas em [situacao-2-desenvolvimento/README.md](situacao-2-desenvolvimento/README.md)
 e no [manual de uso](situacao-2-desenvolvimento/docs/MANUAL-DE-USO.md).
 
-## 🗄️ Banco de dados MySQL
+## Banco de dados MySQL
 
 ```bash
 mysql -u root -p < situacao-1-planejamento/sql/01_schema_mysql.sql
@@ -67,7 +66,7 @@ mysql -u root -p < situacao-1-planejamento/sql/02_dados_iniciais.sql
 
 Usuário de demonstração: `demo@harmonimix.dev` / `Demo1234`
 
-## 🎡 O que é a Roda de Camelot?
+## O que é a Roda de Camelot?
 
 Um sistema que codifica as 24 tonalidades musicais em códigos de **1A a 12B**. Faixas com o **mesmo código**, com
 **números vizinhos** (8A → 7A/9A) ou com o **mesmo número** (8A ↔ 8B) combinam harmonicamente.
